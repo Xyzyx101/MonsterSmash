@@ -1,6 +1,51 @@
-<html>
-	<head>
-	</head>
-	<body>
-	</body>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Monster Smash</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <!--<link href="css/fontfaces.css" rel="stylesheet" type="text/css" />-->
+    <link href="css/main.css" rel="stylesheet" />
+    <!--<link href="css/mobile.css" rel="stylesheet" media="screen and (max-device-width: 768px) and (orientation: portrait),
+                                                        screen and (max-device-width: 1024px) and (orientation: landscape)" />-->
+    <script src="js/monsterSmash.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+            monsterSmash.loadModule("js/dom.js");
+            monsterSmash.loadModule("js/splashScreen.js", monsterSmash.setup)
+            monsterSmash.loadModule("js/DELETEME.js");
+        });
+    </script>
+</head>
+<body>
+    <div id="game">
+        <div id="splashScreen" class="screen">
+            <h1 class="logo">Monster <br />Smash</h1>
+            <progress></progress>
+            <span class="continue">Click to Continue</span>
+        </div>
+        <div id="mainMenu" class="screen">
+            <h2 class="logo">Jewel <br />Warrior</h2>
+            <ul class="menu">
+                <li><button name="game-screen">Play</button></li>
+                <li><button name="high-scores">Highscore</button></li>
+                <li><button name="about">About</button></li>
+                <li><button name="exit-screen">Exit</button></li>
+            </ul>
+        </div>
+        <div id="gameScreen" class="screen">
+            <div class="game-board">
+                <div class="announcement"></div>
+            </div>
+            <footer>
+                <button class="exit">Exit</button>
+                <button class="pause">Pause</button>
+            </footer>
+            <div class="pauseOverlay">
+                <div class="pause-text">Pause</div>
+            </div>
+        </div>
+        <div id="high-scores" class="screen"></div>
+    </div>
+</body>
 </html>

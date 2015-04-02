@@ -1,0 +1,86 @@
+﻿body
+{
+    -webkit-touch-callout : none;
+    -webkit-tap-highlight-color : rgba(0,0,0,0);
+    -webkit-text-size-adjust : none;
+    -moz-text-size-adjust : none;
+    -ms-text-size-adjust : none;
+    text-size-adjust : none;
+    -webkit-user-select : none;
+    -ms-user-select : none;
+    -moz-user-select : none;
+    user-select : none;
+    margin : 0;
+    overflow : hidden;
+}
+
+#game {
+    position : absolute;
+    left : 0;
+    top : 0;
+    width : 16em;
+    height : 12em;
+    background-color : rgb(34, 16, 6);
+    font-family : Arial;
+    font-size : 40px;
+    color : rgb(0, 0, 0);
+    background:
+        radial-gradient(circle at 0 50%, rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px) 0 10px,
+        radial-gradient(at 100% 100%,     rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px), #006016;
+    background-size: 20px 20px;
+}
+
+#game .screen {
+    position : absolute;
+    width : 100%;
+    height : 100%;
+    display : none;
+    z-index : 10;
+}
+
+#game .screen.active {
+    display : block;
+}
+
+#splash-screen {
+    text-align : center;
+    padding-top : 2.5em;
+}
+
+#main-menu {
+    padding-top : 1em;
+}
+
+ul.menu {
+    text-align : center;
+    padding : 0;
+    margin : 0;
+    list-style : none;
+}
+ul.menu li {
+    margin : 0.8em 0;
+}
+ul.menu li button {
+    font-family : Slackey, sans-serif;
+    font-size : 0.6em;
+    color : rgb(100,120,0);
+    width : 10em;
+    height : 1.5em;
+    background : rgb(10,20,0);
+    border : 0.1em solid rgb(255, 255, 0);
+    border-radius : 0.5em;
+    box-shadow : 0.2em 0.2em 0.3em rgb(90,0,0);
+}
+ul.menu li button:hover {
+    background : rgb(30,40,0);
+}
+ul.menu li button:active {
+    color : rgb(255,255,0);
+    background : rgb(30,40,0);
+}
+
+#splash-screen .continue {
+    cursor : pointer;
+    font-size : 0.75em;
+    display : none;
+}
