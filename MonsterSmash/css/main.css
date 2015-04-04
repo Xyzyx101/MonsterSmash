@@ -84,3 +84,7 @@ ul.menu li button:active {
     font-size : 0.75em;
     display : none;
 }
+
+.gameArea {
+    height: 100%;
+}

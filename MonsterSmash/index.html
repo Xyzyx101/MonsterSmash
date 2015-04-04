@@ -14,6 +14,10 @@
             monsterSmash.loadModule("js/dom.js");
             monsterSmash.loadModule("js/splashScreen.js", monsterSmash.setup)
             monsterSmash.loadModule("js/DELETEME.js");
+            monsterSmash.loadModule("js/mainMenu.js");
+            monsterSmash.loadModule("js/test1.js");
+            monsterSmash.loadModule("js/test2.js");
+            monsterSmash.loadModule("js/test3.js");
         });
     </script>
 </head>
@@ -25,18 +29,15 @@
             <span class="continue">Click to Continue</span>
         </div>
         <div id="mainMenu" class="screen">
-            <h2 class="logo">Jewel <br />Warrior</h2>
+            <h2 class="logo">Monster <br />Smash</h2>
             <ul class="menu">
-                <li><button name="game-screen">Play</button></li>
-                <li><button name="high-scores">Highscore</button></li>
-                <li><button name="about">About</button></li>
-                <li><button name="exit-screen">Exit</button></li>
+                <li><button menuAction="test1">Test 1</button></li>
+                <li><button menuaction="test2">Test 2</button></li>
+                <li><button menuaction="test3">Test 3</button></li>
             </ul>
         </div>
         <div id="gameScreen" class="screen">
-            <div class="game-board">
-                <div class="announcement"></div>
-            </div>
+            <div class="gameArea"></div>
             <footer>
                 <button class="exit">Exit</button>
                 <button class="pause">Pause</button>
@@ -45,7 +46,18 @@
                 <div class="pause-text">Pause</div>
             </div>
         </div>
-        <div id="high-scores" class="screen"></div>
+        <div id="test1" class="screen">
+            <div class="gameArea"></div>
+        </div>
+        <div id="test2" class="screen">
+            <div class="gameArea"></div>
+        </div>
+        <div id="test3" class="screen">
+            <div class="gameArea"></div>
+        </div>
+        <div id="high-scores" class="screen">
+
+        </div>
     </div>
 </body>
 </html>
