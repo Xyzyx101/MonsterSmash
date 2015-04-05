@@ -18,8 +18,12 @@
     position : absolute;
     left : 0;
     top : 0;
+    /*
     width : 16em;
     height : 12em;
+    */
+    width:100%;
+    height:100%;
     background-color : rgb(34, 16, 6);
     font-family : Arial;
     font-size : 40px;
@@ -60,7 +64,8 @@ ul.menu {
 ul.menu li {
     margin : 0.8em 0;
 }
-ul.menu li button {
+ul.menu li button,
+.screen button {
     font-family : Slackey, sans-serif;
     font-size : 0.6em;
     color : rgb(100,120,0);
@@ -71,10 +76,12 @@ ul.menu li button {
     border-radius : 0.5em;
     box-shadow : 0.2em 0.2em 0.3em rgb(90,0,0);
 }
-ul.menu li button:hover {
+ul.menu li button:hover,
+.screen button:hover {
     background : rgb(30,40,0);
 }
-ul.menu li button:active {
+ul.menu li button:active,
+.screen button:active {
     color : rgb(255,255,0);
     background : rgb(30,40,0);
 }
@@ -83,4 +90,30 @@ ul.menu li button:active {
     cursor : pointer;
     font-size : 0.75em;
     display : none;
+}
+
+#gameScreen footer {
+    position: absolute;
+    bottom: 0;
+}
+#gameScreen .pauseOverlay {
+    position: absolute;
+    top: 0;
+}
+
+/* force portrait mode */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:portrait) {
+  body {
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }

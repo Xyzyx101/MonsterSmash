@@ -4,7 +4,6 @@
         , message;
 
     function run() {
-        console.log("run");
         var $ = monsterSmash.dom.$;
         progressBar = $("#splashScreen progress")[0];
         progressBar.style.display = "block";
