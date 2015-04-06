@@ -61,9 +61,11 @@ ul.menu {
     margin : 0;
     list-style : none;
 }
+
 ul.menu li {
     margin : 0.8em 0;
 }
+
 ul.menu li button,
 .screen button {
     font-family : Slackey, sans-serif;
@@ -76,10 +78,12 @@ ul.menu li button,
     border-radius : 0.5em;
     box-shadow : 0.2em 0.2em 0.3em rgb(90,0,0);
 }
+
 ul.menu li button:hover,
 .screen button:hover {
     background : rgb(30,40,0);
 }
+
 ul.menu li button:active,
 .screen button:active {
     color : rgb(255,255,0);
@@ -96,9 +100,18 @@ ul.menu li button:active,
     position: absolute;
     bottom: 0;
 }
+
 #gameScreen .pauseOverlay {
     position: absolute;
     top: 0;
+}
+
+#gameScreen canvas {
+    position: absolute;
+}
+
+#gameScreen .backgroundLayer {
+    z-index: -100;
 }
 
 /* force portrait mode */

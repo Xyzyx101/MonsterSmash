@@ -10,23 +10,33 @@
         , entities = []
         , canvas
         , ctx
+        , bgCanvas
+        , bgCtx
     ;
 
     function run() {
         var $ = monsterSmash.dom.$;
         var gameElement = $("#gameScreen")[0];
+        var elementBounds = gameElement.getBoundingClientRect();
+        gameScale = calculateScale(elementBounds);
+
         canvas = document.createElement("canvas");
         monsterSmash.dom.addClass(canvas, "gameLayer");
-        
-        var elementBounds = gameElement.getBoundingClientRect();
-        
-        gameScale = calculateScale(elementBounds);
         ctx = canvas.getContext("2d");
         canvas.width = baseSize.width * gameScale;
         canvas.height = baseSize.height * gameScale;
         ctx.scale(gameScale, gameScale);
         gameElement.appendChild(canvas);
 
+        bgCanvas = document.createElement("canvas");
+        monsterSmash.dom.addClass(bgCanvas, "backgroundLayer");
+        bgCtx = bgCanvas.getContext("2d");
+        bgCanvas.width = baseSize.width * gameScale;
+        bgCanvas.height = baseSize.height * gameScale;
+        bgCtx.scale(gameScale, gameScale);
+        gameElement.appendChild(bgCanvas);
+
+        loadLevel();
     }
 
     function calculateScale(clientSize) {
@@ -49,11 +59,10 @@
     function loadLevel() {
         var level = monsterSmash.gameManager.nextLevel();
         killTick();
-        backgroundLayer = null;
         entities = [];
         resources = [];
         levelSize = level.levelSize;
-        //currentLevel = new gameLevel();
+        backgroundLayer = new monsterSmash.BackgroundLayer(bgCtx, level.background);
         function notLoaded(element) {
             return element.isLoaded === false;
         }
@@ -78,13 +87,6 @@
 
     function addSoundResource(newResource) {
         resources.push(newResource);
-    }
-
-    function setBackgroundLayer(layer) {
-        backgroundLayer = layer;
-        levelSize.width = layer.width;
-        levelSize.height = layer.height;
-        return layer;
     }
 
     function registerEntity(entity) {
@@ -139,5 +141,6 @@
     return {
         run: run
         , loadLevel: loadLevel
+        , addResource: addResource
     };
 })();

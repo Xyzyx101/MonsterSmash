@@ -15,7 +15,7 @@
         var script = document.createElement("script");
         script.onload = function () {
             queueEntry.loaded = true;
-            if(queueEntry.callback) {
+            if (queueEntry.callback) {
                 queueEntry.callback();
             }
         };
@@ -49,8 +49,17 @@
             event.preventDefault();
         });
 
+        init();
+
         showScreen("splashScreen");
-        
+    }
+
+    function init() {
+        if (monsterSmash.resourcesLoaded() < 1) {
+            setTimeout(init, 0);
+        } else {
+            monsterSmash.gameManager.init();
+        }
     }
 
     function showScreen(screenId) {

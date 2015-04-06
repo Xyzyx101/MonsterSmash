@@ -6,10 +6,12 @@
         , levelMap = []
     ;
 
-    levelMap[0] = levels.level00;
+    function init() {
+        levelMap[0] = levels.level00;   
+    }
 
     function startNewGame() {
-        currentLevel = 0;
+        currentLevel = -1;
         score = 0;
         isDead = false;
     }
@@ -28,7 +30,8 @@
     }
 
     return {
-        startNewGame: startNewGame
+        init: init
+        , startNewGame: startNewGame
         , nextLevel: nextLevel
         , endGame: endGame
         , completeLevel: completeLevel

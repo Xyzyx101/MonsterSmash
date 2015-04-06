@@ -14,6 +14,7 @@
     function menuAction(action) {
         switch (action) {
             case "gameScreen":
+                monsterSmash.gameManager.startNewGame();
                 monsterSmash.showScreen("gameScreen");
                 break;
             case "highScoreScreen":
