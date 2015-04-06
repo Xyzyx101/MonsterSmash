@@ -1,7 +1,6 @@
 ﻿monsterSmash.screens.gameScreen = (function () {
     "use strict";
-    var gameState = null
-        , backgroundLayer = null
+    var backgroundLayer = null
         , resources = []
         , currentLevel = null
         , baseSize = { width: 1024, height: 768 } // this is an arbitrary value for the art
@@ -30,7 +29,7 @@
 
     }
 
-    var calculateScale = function (clientSize) {
+    function calculateScale(clientSize) {
         var baseRatio = baseSize.width / baseSize.height;
         var clientRatio;
         if (clientSize.width >= clientSize.height) {
@@ -45,13 +44,15 @@
             scale = clientSize.height / baseSize.height;
         }
         return scale;
-    };
+    }
 
-    var loadLevel = function (level) {
+    function loadLevel() {
+        var level = monsterSmash.gameManager.nextLevel();
         killTick();
         backgroundLayer = null;
         entities = [];
         resources = [];
+        levelSize = level.levelSize;
         //currentLevel = new gameLevel();
         function notLoaded(element) {
             return element.isLoaded === false;
@@ -68,32 +69,36 @@
             }
         }
         setTimeout(verifyAllResourcesLoaded, 0);
-    };
+    }
 
-    var addResource = function (path, newResource) {
+    function addResource(path, newResource) {
         monsterSmash.imageManager.storeImage(path, newResource.getImage());
         resources.push(newResource);
-    };
-    var addSoundResource = function (newResource) {
+    }
+
+    function addSoundResource(newResource) {
         resources.push(newResource);
-    };
-    var setBackgroundLayer = function (layer) {
+    }
+
+    function setBackgroundLayer(layer) {
         backgroundLayer = layer;
         levelSize.width = layer.width;
         levelSize.height = layer.height;
         return layer;
-    };
-    var registerEntity = function (entity) {
+    }
+
+    function registerEntity(entity) {
         entities.push(entity);
         return entity;
-    };
-    var destroy = function (entity) {
+    }
+
+    function destroy(entity) {
         var index = entities.indexOf(entity);
         entities.splice(index, 1);
-    };
+    }
 
     var lastTick = 0;
-    var tick = function (tickTime) {
+    function tick(tickTime) {
         var dt = tickTime - lastTick;
         lastTick = tickTime;
         update(dt);
@@ -101,10 +106,10 @@
         if (frameRequestId) {
             frameRequestId = window.requestAnimationFrame(tick);
         }
-    };
+    }
 
     var leftOverTime = 0;
-    var update = function (dt) {
+    function update(dt) {
         var fixedUpdateTime = 20;
         var totalTime = dt + leftOverTime;
         while (totalTime > fixedUpdateTime) {
@@ -115,21 +120,21 @@
             totalTime -= fixedUpdateTime;
         }
         leftOverTime = totalTime;
-    };
+    }
 
-    var render = function () {
+    function render() {
         backgroundLayer.render();
-        entities.forEach(function (element) {
-            element.render();
-        });
-    };
+        for (var i = 0, len = entities.len; i < len; ++i) {
+            entities[i].render();
+        }
+    }
 
-    var killTick = function () {
+    function killTick() {
         if (frameRequestId) {
             window.cancelAnimationFrame(frameRequestId);
             frameRequestId = null;
         }
-    };
+    }
 
     return {
         run: run
