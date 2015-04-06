@@ -57,27 +57,34 @@
     }
 
     function loadLevel() {
+        var $ = monsterSmash.dom.$;
+        var progress = $("#gameScreen .loadOverlay progress")[0];
+        displayLoadOverlay();
         var level = monsterSmash.gameManager.nextLevel();
         killTick();
         entities = [];
         resources = [];
         levelSize = level.levelSize;
         backgroundLayer = new monsterSmash.BackgroundLayer(bgCtx, level.background);
-        function notLoaded(element) {
-            return element.isLoaded === false;
+        function isLoaded(element) {
+            return element.isLoaded === true;
         }
         /* setTimeout with delay 0 is used because I don't actually want a delay.
          * I do need to clear the call stack to allow the event loop to run my
          * onLoad events attached to each resource.  A regular loop would block.*/
         function verifyAllResourcesLoaded() {
-            if (resources.some(notLoaded)) {
-                setTimeout(verifyAllResourcesLoaded, 0);
-            } else {
+            var loaded = resources.filter(isLoaded);
+            if (loaded.length === resources.length) {
                 //killTick();
+                hideLoadOverlay();
                 frameRequestId = window.requestAnimationFrame(tick);
+            } else {
+                setTimeout(verifyAllResourcesLoaded, 0);
+                progress.value = loaded.length / resources.length;
             }
         }
         setTimeout(verifyAllResourcesLoaded, 0);
+        unpause();
     }
 
     function addResource(path, newResource) {
@@ -136,6 +143,30 @@
             window.cancelAnimationFrame(frameRequestId);
             frameRequestId = null;
         }
+    }
+
+    function displayLoadOverlay() {
+        var $ = monsterSmash.dom.$;
+        var overlay = $("#gameScreen .loadOverlay")[0];
+        overlay.style.display = "block";
+    }
+
+    function hideLoadOverlay() {
+        var $ = monsterSmash.dom.$;
+        var overlay = $("#gameScreen .loadOverlay")[0];
+        overlay.style.display = "none";
+    }
+
+    function pause() {
+        var $ = monsterSmash.dom.$;
+        var overlay = $("#gameScreen .pauseOverlay")[0];
+        overlay.style.display = "block";
+    }
+
+    function unpause() {
+        var $ = monsterSmash.dom.$;
+        var overlay = $("#gameScreen .pauseOverlay")[0];
+        overlay.style.display = "none";
     }
 
     return {

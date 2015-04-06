@@ -101,17 +101,55 @@ ul.menu li button:active,
     bottom: 0;
 }
 
-#gameScreen .pauseOverlay {
-    position: absolute;
-    top: 0;
-}
-
 #gameScreen canvas {
     position: absolute;
 }
 
 #gameScreen .backgroundLayer {
     z-index: -100;
+}
+
+#gameScreen .loadOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background:
+        radial-gradient(circle at 0 50%, rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px) 0 10px,
+        radial-gradient(at 100% 100%,     rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px), #006016;
+    background-size: 20px 20px;
+}
+
+#gameScreen .pauseOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background : rgba(20, 0, 20, 0.8);
+}
+
+.overlayText {
+    display: block;
+    position: relative;
+    width: 5em;
+    top: 35%;
+    -ms-transform: translateY(-35%);
+    -webkit-transform: translateY(-35%);
+    -moz-transform: translateY(-35%);
+    -o-transform: translateY(-35%);
+    transform: translateY(-35%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+progress {
+    display: block;
+    position: relative;
+    height: 1em;
+    width: 90%;
+    top: 50%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* force portrait mode */
