@@ -49,13 +49,58 @@ ms.Monster = function (ctx, initialPosition) {
 
     var renderComp = ms.RenderComponent.call(this, ctx, "./images/monster01.png", 100, frameSize);
     renderComp.addAnim(new ms.Anim(
-        "Test"
+        "TestAnim01"
         , [{ x: 0, y: 0 }, { x: frameSize.width, y: 0 }]
         , [0, 1, 1, 1]
         )
     );
-    renderComp.changeAnim("Test");
+    renderComp.addAnim(new ms.Anim(
+        "TestAnim02"
+        , [{ x: 0, y: 0 }, { x: frameSize.width, y: 0 }]
+        , [0, 1, 0, 1]
+        )
+    );
+    var FSM = ms.FSMComponent.call(this);
+    FSM.addState("test01",
+        {
+            before: function () {
+                console.log("init test state");
+                renderComp.changeAnim("TestAnim01");
+                jumpTimer = maxHoldJumpTime;
+            }
+            , state: function (dt) {
+                //console.log("test state")
+                jumpTimer -= dt;
+                if (jumpTimer <= 0) {
+                    FSM.changeState("test02");
+                }
+            }
+            , after: function () {
+                console.log("cleanup test state");
+            }
+        });
+    FSM.addState("test02",
+        {
+            before: function () {
+                console.log("init test02 state");
+                renderComp.changeAnim("TestAnim02");
+                jumpTimer = maxHoldJumpTime;
+            }
+            , state: function (dt) {
+                //console.log("test02 state")
+                jumpTimer -= dt;
+                if (jumpTimer <= 0) {
+                    FSM.changeState("test01");
+                }
+            }
+            , after: function () {
+                console.log("cleanup test02 state");
+            }
+        });
+    FSM.changeState("test01");
+
     function update(dt) {
+        FSM.update(dt);
         renderComp.animate(dt);
     }
     function render() {
