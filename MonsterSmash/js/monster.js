@@ -1,5 +1,5 @@
 ﻿/* In game monster entity */
-monsterSmash.Monster = function (ctx, initialPosition) {
+ms.Monster = function (ctx, initialPosition) {
     "use strict";
     var that = this;
 
@@ -47,8 +47,8 @@ monsterSmash.Monster = function (ctx, initialPosition) {
     var jumpTimer = 0;
     var maxHoldJumpTime = 400;
 
-    var renderComp = monsterSmash.RenderComponent.call(this, ctx, "./images/monster01.png", 100, frameSize);
-    renderComp.addAnim(new monsterSmash.Anim(
+    var renderComp = ms.RenderComponent.call(this, ctx, "./images/monster01.png", 100, frameSize);
+    renderComp.addAnim(new ms.Anim(
         "Test"
         , [{ x: 0, y: 0 }, { x: frameSize.width, y: 0 }]
         , [0, 1, 1, 1]

@@ -1,9 +1,9 @@
-﻿monsterSmash.screens.optionsScreen = (function () {
+﻿ms.screens.optionsScreen = (function () {
     "use strict";
 
     function run() {
-        monsterSmash.dom.bind("#optionsScreen .return", "click", function (e) {
-            monsterSmash.showScreen("mainMenu");
+        ms.dom.bind("#optionsScreen .return", "click", function (e) {
+            ms.showScreen("mainMenu");
         });
 
     }

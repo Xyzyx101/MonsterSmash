@@ -1,9 +1,9 @@
-﻿monsterSmash.screens.aboutScreen = (function () {
+﻿ms.screens.aboutScreen = (function () {
     "use strict";
 
     function run() {
-        monsterSmash.dom.bind("#aboutScreen .return", "click", function (e) {
-            monsterSmash.showScreen("mainMenu");
+        ms.dom.bind("#aboutScreen .return", "click", function (e) {
+            ms.showScreen("mainMenu");
         });
 
     }

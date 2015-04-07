@@ -1,4 +1,4 @@
-﻿monsterSmash.screens.gameScreen = (function () {
+﻿ms.screens.gameScreen = (function () {
     "use strict";
     var backgroundLayer = null
         , resources = []
@@ -15,13 +15,13 @@
     ;
 
     function run() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var gameElement = $("#gameScreen")[0];
         var elementBounds = gameElement.getBoundingClientRect();
         gameScale = calculateScale(elementBounds);
 
         canvas = document.createElement("canvas");
-        monsterSmash.dom.addClass(canvas, "gameLayer");
+        ms.dom.addClass(canvas, "gameLayer");
         ctx = canvas.getContext("2d");
         canvas.width = baseSize.width * gameScale;
         canvas.height = baseSize.height * gameScale;
@@ -29,7 +29,7 @@
         gameElement.appendChild(canvas);
 
         bgCanvas = document.createElement("canvas");
-        monsterSmash.dom.addClass(bgCanvas, "backgroundLayer");
+        ms.dom.addClass(bgCanvas, "backgroundLayer");
         bgCtx = bgCanvas.getContext("2d");
         bgCanvas.width = baseSize.width * gameScale;
         bgCanvas.height = baseSize.height * gameScale;
@@ -57,16 +57,16 @@
     }
 
     function loadLevel() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var progress = $("#gameScreen .loadOverlay progress")[0];
         displayLoadOverlay();
-        var level = monsterSmash.gameManager.nextLevel();
+        var level = ms.gameManager.nextLevel();
         killTick();
         entities = [];
         resources = [];
         levelSize = level.levelSize;
-        backgroundLayer = new monsterSmash.BackgroundLayer(bgCtx, level.background);
-        var monster = registerEntity(new monsterSmash.Monster(ctx, level.playerSpawn));
+        backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background);
+        var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
         function isLoaded(element) {
             return element.isLoaded === true;
         }
@@ -89,7 +89,7 @@
     }
 
     function addResource(resource, path, image) {
-        monsterSmash.imageManager.storeImage(path, image);
+        ms.imageManager.storeImage(path, image);
         resources.push(resource);
     }
 
@@ -148,25 +148,25 @@
     }
 
     function displayLoadOverlay() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var overlay = $("#gameScreen .loadOverlay")[0];
         overlay.style.display = "block";
     }
 
     function hideLoadOverlay() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var overlay = $("#gameScreen .loadOverlay")[0];
         overlay.style.display = "none";
     }
 
     function pause() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var overlay = $("#gameScreen .pauseOverlay")[0];
         overlay.style.display = "block";
     }
 
     function unpause() {
-        var $ = monsterSmash.dom.$;
+        var $ = ms.dom.$;
         var overlay = $("#gameScreen .pauseOverlay")[0];
         overlay.style.display = "none";
     }

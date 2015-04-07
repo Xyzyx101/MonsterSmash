@@ -1,4 +1,4 @@
-﻿monsterSmash.imageManager = (function () {
+﻿ms.imageManager = (function () {
     "use strict";
     var images = {};
 

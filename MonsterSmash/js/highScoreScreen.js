@@ -1,9 +1,9 @@
-﻿monsterSmash.screens.highScoreScreen = (function () {
+﻿ms.screens.highScoreScreen = (function () {
     "use strict";
 
     function run() {
-        monsterSmash.dom.bind("#highScoreScreen .return", "click", function (e) {
-            monsterSmash.showScreen("mainMenu");
+        ms.dom.bind("#highScoreScreen .return", "click", function (e) {
+            ms.showScreen("mainMenu");
         });
 
     }

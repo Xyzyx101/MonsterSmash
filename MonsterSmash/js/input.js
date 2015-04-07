@@ -1,4 +1,4 @@
-﻿monsterSmash.input = (function () {
+﻿ms.input = (function () {
     "use strict";
     var KEY = {
         LEFT_ARROW: 37,

@@ -2,15 +2,15 @@
  * It is added to a game entity by chaining the contructors
  * 
  *      someGameObject = function () {
- *          monsterSmash.Entity.call(this, "./images/foo.png", 350, {width:64, height:32});
+ *          ms.Entity.call(this, "./images/foo.png", 350, {width:64, height:32});
  *      }
  */
-monsterSmash.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) {
+ms.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) {
     "use strict";
     var image;
 
-    if (monsterSmash.imageManager.getImage(src)) {
-        image = monsterSmash.imageManager.getImage(src);
+    if (ms.imageManager.getImage(src)) {
+        image = ms.imageManager.getImage(src);
         this.isLoaded = true;
     } else {
         this.isLoaded = false;
@@ -22,7 +22,7 @@ monsterSmash.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) 
         // of this function rather than the context of image.
         image.addEventListener("load", loadHandler.bind(this), false);
         image.src = src;
-        monsterSmash.screens.gameScreen.addResource(this, src, image);
+        ms.screens.gameScreen.addResource(this, src, image);
     }
 
     var currentFrame = 0;
@@ -96,7 +96,7 @@ monsterSmash.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) 
  @name - animation name
  @frames - [{x:0,y:0},{x:0,y:0},{x:0,y:0}] - array of position vectors from the source image
  @playOrder - [0,1,2,3,2,1,0] - animation frame sequence */
-monsterSmash.Anim = function (name, frames, playOrder) {
+ms.Anim = function (name, frames, playOrder) {
     this.name = name;
     this.frames = frames;
     this.playOrder = playOrder;

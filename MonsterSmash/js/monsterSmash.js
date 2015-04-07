@@ -1,4 +1,4 @@
-﻿var monsterSmash = (function () {
+﻿var ms = (function () {
     "use strict";
 
     var resourceQueue = []
@@ -45,7 +45,7 @@
         }
 
         // disable touchmove to prevent overscroll
-        monsterSmash.dom.bind(document, "touchmove", function (event) {
+        ms.dom.bind(document, "touchmove", function (event) {
             event.preventDefault();
         });
 
@@ -55,20 +55,20 @@
     }
 
     function init() {
-        if (monsterSmash.resourcesLoaded() < 1) {
+        if (ms.resourcesLoaded() < 1) {
             setTimeout(init, 0);
         } else {
-            monsterSmash.gameManager.init();
-            monsterSmash.input.init();
+            ms.gameManager.init();
+            ms.input.init();
         }
     }
 
     function showScreen(screenId) {
-        var dom = monsterSmash.dom
+        var dom = ms.dom
             , $ = dom.$
             , activeScreen = $("#game .screen.active")[0]
             , screen = $("#" + screenId)[0];
-        if (!monsterSmash.screens[screenId]) {
+        if (!ms.screens[screenId]) {
             console.error("Module " + screenId + " not implimented.");
             return;
         }
@@ -76,7 +76,7 @@
             dom.removeClass(activeScreen, "active");
         }
         dom.addClass(screen, "active");
-        monsterSmash.screens[screenId].run();
+        ms.screens[screenId].run();
     }
 
     return {

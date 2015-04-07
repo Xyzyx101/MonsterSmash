@@ -1,6 +1,6 @@
 ﻿/* This draws the static background layer.  It can be an image or a static colour.  Parallax effects cound be added to the layer in the future */
 
-monsterSmash.BackgroundLayer = function (ctx, background) {
+ms.BackgroundLayer = function (ctx, background) {
     "use strict";
     var staticBackgroundColor = null
         , size = {
@@ -14,8 +14,8 @@ monsterSmash.BackgroundLayer = function (ctx, background) {
         this.getImage = function () {
             return image;
         };
-        if (monsterSmash.imageManager.getImage(background.image)) {
-            image = monsterSmash.imageManager.getImage(background.image);
+        if (ms.imageManager.getImage(background.image)) {
+            image = ms.imageManager.getImage(background.image);
             this.isLoaded = true;
         } else {
             this.isLoaded = false;
@@ -27,7 +27,7 @@ monsterSmash.BackgroundLayer = function (ctx, background) {
             // of this function rather than the context of image.
             image.addEventListener("load", loadHandler.bind(this), false);
             image.src = background.image;
-            monsterSmash.screens.gameScreen.addResource(this, image.src, image);
+            ms.screens.gameScreen.addResource(this, image.src, image);
         }
     } else {
         staticBackgroundColor = "rgb(" +

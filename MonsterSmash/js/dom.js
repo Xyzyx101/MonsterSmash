@@ -1,4 +1,4 @@
-﻿monsterSmash.dom = (function () {
+﻿ms.dom = (function () {
     "use strict";
     function $(path, parent) {
         parent = parent || document;

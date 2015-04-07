@@ -1,4 +1,4 @@
-﻿monsterSmash.gameManager = (function () {
+﻿ms.gameManager = (function () {
     var currentLevel
         , score
         , isDead = false
@@ -22,11 +22,11 @@
 
     function endGame() {
         isDead = true;
-        monsterSmash.showScreen("completeLevelScreen");
+        ms.showScreen("completeLevelScreen");
     }
 
     function completeLevel() {
-        monsterSmash.showScreen("completeLevelScreen");
+        ms.showScreen("completeLevelScreen");
     }
 
     return {
