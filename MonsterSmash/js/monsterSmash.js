@@ -59,6 +59,7 @@
             setTimeout(init, 0);
         } else {
             monsterSmash.gameManager.init();
+            monsterSmash.input.init();
         }
     }
 

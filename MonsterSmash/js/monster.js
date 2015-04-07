@@ -56,11 +56,9 @@ monsterSmash.Monster = function (ctx, initialPosition) {
     );
     renderComp.changeAnim("Test");
     function update(dt) {
-        console.log("Monster Update")
         renderComp.animate(dt);
     }
     function render() {
-        console.log("Monster Render")
         renderComp.displayAnim(position.x, position.y);
     }
 
@@ -68,5 +66,5 @@ monsterSmash.Monster = function (ctx, initialPosition) {
         update: update
         , render: render
         , isLoaded: this.isLoaded
-    }
+    };
 };
