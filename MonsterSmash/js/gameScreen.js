@@ -66,6 +66,7 @@
         resources = [];
         levelSize = level.levelSize;
         backgroundLayer = new monsterSmash.BackgroundLayer(bgCtx, level.background);
+        var monster = registerEntity(new monsterSmash.Monster(ctx, level.playerSpawn));
         function isLoaded(element) {
             return element.isLoaded === true;
         }
@@ -87,9 +88,9 @@
         unpause();
     }
 
-    function addResource(path, newResource) {
-        monsterSmash.imageManager.storeImage(path, newResource.getImage());
-        resources.push(newResource);
+    function addResource(resource, path, image) {
+        monsterSmash.imageManager.storeImage(path, image);
+        resources.push(resource);
     }
 
     function addSoundResource(newResource) {
@@ -123,7 +124,7 @@
         var totalTime = dt + leftOverTime;
         while (totalTime > fixedUpdateTime) {
             var totalEntities = entities.length;
-            for (var i = 0; i < totalEntities; ++i) {
+            for (var i = 0, len = entities.length; i < len; ++i) {
                 entities[i].update(fixedUpdateTime);
             }
             totalTime -= fixedUpdateTime;
@@ -133,7 +134,8 @@
 
     function render() {
         backgroundLayer.render();
-        for (var i = 0, len = entities.len; i < len; ++i) {
+        ctx.clearRect(0, 0, baseSize.width, baseSize.height);
+        for (var i = 0, len = entities.length; i < len; ++i) {
             entities[i].render();
         }
     }

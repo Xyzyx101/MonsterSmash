@@ -27,7 +27,7 @@ monsterSmash.BackgroundLayer = function (ctx, background) {
             // of this function rather than the context of image.
             image.addEventListener("load", loadHandler.bind(this), false);
             image.src = background.image;
-            monsterSmash.screens.gameScreen.addResource(background.image, this);
+            monsterSmash.screens.gameScreen.addResource(this, image.src, image);
         }
     } else {
         staticBackgroundColor = "rgb(" +
