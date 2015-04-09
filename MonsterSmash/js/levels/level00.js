@@ -15,6 +15,12 @@
         audio: [""]
         , images: [""]
     }
-    , buildings: []
+    , buildings: [
+        {
+            buildingStyle: 1
+            , xPos: 300
+            , size: { width: 8, height: 7 }
+        }
+    ]
     , spawns:[]
 };

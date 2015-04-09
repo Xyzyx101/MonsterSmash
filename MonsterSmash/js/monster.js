@@ -64,7 +64,7 @@ ms.Monster = function (ctx, initialPosition) {
     FSM.addState("test01",
         {
             before: function () {
-                console.log("init test state");
+                //console.log("init test state");
                 renderComp.changeAnim("TestAnim01");
                 jumpTimer = maxHoldJumpTime;
             }
@@ -76,13 +76,13 @@ ms.Monster = function (ctx, initialPosition) {
                 }
             }
             , after: function () {
-                console.log("cleanup test state");
+                //console.log("cleanup test state");
             }
         });
     FSM.addState("test02",
         {
             before: function () {
-                console.log("init test02 state");
+                //console.log("init test02 state");
                 renderComp.changeAnim("TestAnim02");
                 jumpTimer = maxHoldJumpTime;
             }
@@ -94,7 +94,7 @@ ms.Monster = function (ctx, initialPosition) {
                 }
             }
             , after: function () {
-                console.log("cleanup test02 state");
+                //console.log("cleanup test02 state");
             }
         });
     FSM.changeState("test01");

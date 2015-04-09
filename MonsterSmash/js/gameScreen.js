@@ -8,6 +8,7 @@
         , gameScale = 0
         , frameRequestId
         , entities = []
+        , buildings = []
         , canvas
         , ctx
         , bgCanvas
@@ -67,6 +68,16 @@
         levelSize = level.levelSize;
         backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background);
         var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
+        for (var i = 0, len = level.buildings.length; i < len; ++i) {
+            var newBuilding = ms.buildingFactory.createBuilding(
+                                    ctx
+                                    , level.buildings[i].buildingStyle
+                                    , level.buildings[i].xPos
+                                    , level.buildings[i].size
+                              );
+            buildings.push(newBuilding);
+        }
+
         function isLoaded(element) {
             return element.isLoaded === true;
         }
@@ -134,8 +145,12 @@
 
     function render() {
         backgroundLayer.render();
+        var i = 0, len = 0;
         ctx.clearRect(0, 0, baseSize.width, baseSize.height);
-        for (var i = 0, len = entities.length; i < len; ++i) {
+        for (i = 0, len = buildings.length; i < len; ++i) {
+            buildings[i].render();
+        }
+        for (i = 0, len = entities.length; i < len; ++i) {
             entities[i].render();
         }
     }
@@ -175,5 +190,6 @@
         run: run
         , loadLevel: loadLevel
         , addResource: addResource
+        , baseSize: baseSize
     };
 })();
