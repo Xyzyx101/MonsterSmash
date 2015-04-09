@@ -13,6 +13,7 @@
         , ctx
         , bgCanvas
         , bgCtx
+        , buildingQuadtree
     ;
 
     function run() {
@@ -77,6 +78,7 @@
                               );
             buildings.push(newBuilding);
         }
+        buildingQuadtree = new ms.Quadtree(0, { x: 0, y: 0, width: levelSize.width, height: levelSize.height });
 
         function isLoaded(element) {
             return element.isLoaded === true;
@@ -135,8 +137,13 @@
         var totalTime = dt + leftOverTime;
         while (totalTime > fixedUpdateTime) {
             var totalEntities = entities.length;
-            for (var i = 0, len = entities.length; i < len; ++i) {
+            var i, len;
+            for (i = 0, len = entities.length; i < len; ++i) {
                 entities[i].update(fixedUpdateTime);
+            }
+            buildingQuadtree.clear();
+            for (i = 0, len = buildings.length; i < len; ++i) {
+                buildings[i].addCollidersToQuadtree(buildingQuadtree);
             }
             totalTime -= fixedUpdateTime;
         }
@@ -153,6 +160,8 @@
         for (i = 0, len = entities.length; i < len; ++i) {
             entities[i].render();
         }
+        buildingQuadtree.debugDraw(ctx);
+        buildingQuadtree.debugRetrieve(ctx, new ms.Collider(275, 600, 50, 50, null));
     }
 
     function killTick() {

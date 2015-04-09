@@ -102,9 +102,39 @@
 
         }
 
+        function addCollidersToQuadtree(quadtree) {
+            for (var col = 0; col < size.width; ++col) {
+                var tileWidth;
+                if (col === 0) {
+                    tileWidth = tileSize.leftEdgeWidth;
+                } else if (col === size.width - 1) {
+                    tileWidth = tileSize.rightEdgeWidth;
+                } else {
+                    tileWidth = tileSize.centerWidth;
+                }
+                for (var row = 0; row < size.height; ++row) {
+                    var parentObj = {
+                        type: "building"
+                        , building: this
+                        , tile: { row: row, col: col }
+                    };
+                    var colliderX, colliderY;
+                    if (col === 0) {
+                        colliderX = location.x;
+                    } else {
+                        colliderX = location.x + tileSize.leftEdgeWidth + (col - 1) * tileSize.centerWidth;
+                    }
+                    colliderY = location.y + row * tileSize.floorHeight;
+                    var collider = new ms.Collider(colliderX, colliderY, tileWidth, tileSize.floorHeight, parentObj);
+                    quadtree.insert(collider);
+                }
+            }
+        }
+
         return {
             render: render
             , damage: damage
+            , addCollidersToQuadtree: addCollidersToQuadtree
         };
     }
 
