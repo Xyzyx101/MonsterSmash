@@ -44,7 +44,8 @@
             , tileHP = []
             , tileDamage = []
             , tileColliders = []
-            , damageOffset;
+            , damageOffset
+            , tileBB = { width: 50, height: 50 };
 
         damageOffset = tileSize.rightEdgeWidth + tileSize.centerWidth + tileSize.leftEdgeWidth;
         for (var i = 0; i < size.width; ++i) {
@@ -104,14 +105,15 @@
 
         function addCollidersToQuadtree(quadtree) {
             for (var col = 0; col < size.width; ++col) {
-                var tileWidth;
+                var tileXOffset;
                 if (col === 0) {
-                    tileWidth = tileSize.leftEdgeWidth;
+                    tileXOffset = Math.floor((tileSize.leftEdgeWidth - tileBB.width) * 0.5);
                 } else if (col === size.width - 1) {
-                    tileWidth = tileSize.rightEdgeWidth;
+                    tileXOffset = Math.floor((tileSize.rightEdgeWidth - tileBB.width) * 0.5);
                 } else {
-                    tileWidth = tileSize.centerWidth;
+                    tileXOffset = Math.floor((tileSize.centerWidth - tileBB.width) * 0.5);
                 }
+                var tileYOffset = Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
                 for (var row = 0; row < size.height; ++row) {
                     var parentObj = {
                         type: "building"
@@ -120,12 +122,12 @@
                     };
                     var colliderX, colliderY;
                     if (col === 0) {
-                        colliderX = location.x;
+                        colliderX = location.x + tileXOffset;
                     } else {
-                        colliderX = location.x + tileSize.leftEdgeWidth + (col - 1) * tileSize.centerWidth;
+                        colliderX = location.x + tileSize.leftEdgeWidth + (col - 1) * tileSize.centerWidth + tileXOffset;
                     }
-                    colliderY = location.y + row * tileSize.floorHeight;
-                    var collider = new ms.Collider(colliderX, colliderY, tileWidth, tileSize.floorHeight, parentObj);
+                    colliderY = location.y + row * tileSize.floorHeight + tileYOffset;
+                    var collider = new ms.Collider(colliderX, colliderY, tileBB.width, tileBB.height, parentObj);
                     quadtree.insert(collider);
                 }
             }
