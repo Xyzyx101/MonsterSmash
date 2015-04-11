@@ -1,14 +1,17 @@
 ﻿ms.screens.mainMenu = (function () {
     "use strict";
-
+    var initialized = false;
+    
     function run() {
-        ms.dom.bind("#mainMenu ul.menu", "click", function (e) {
-            if (e.target.nodeName.toLowerCase() === "button") {
-                var action = e.target.getAttribute("menuAction");
-                menuAction(action);
-            }
-        });
-
+        if (!initialized) {
+            ms.dom.bind("#mainMenu ul.menu", "click", function (e) {
+                if (e.target.nodeName.toLowerCase() === "button") {
+                    var action = e.target.getAttribute("menuAction");
+                    menuAction(action);
+                }
+            });
+        }
+        initialized = true;
     }
 
     function menuAction(action) {

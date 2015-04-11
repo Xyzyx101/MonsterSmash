@@ -4,7 +4,6 @@
     <title>Monster Smash</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <!--<link href="css/fontfaces.css" rel="stylesheet" type="text/css" />-->
     <link href="css/main.css" rel="stylesheet" />
     <!--<link href="css/mobile.css" rel="stylesheet" media="screen and (max-device-width: 768px) and (orientation: portrait),
                                                         screen and (max-device-width: 1024px) and (orientation: landscape)" />-->
@@ -50,15 +49,29 @@
             </ul>
         </div>
         <div id="gameScreen" class="screen">
-            <footer>
-                <button class="exit">Exit</button>
-                <button class="pause">Pause</button>
-            </footer>
+            <header>
+                <section id="scoreSection">
+                    <span class="scoreLabel">Score</span>
+                    <span class="score">00000</span>
+                </section>
+                <section id="powerSection">
+                    <span class="powerLabel">Power</span>
+                    <div class="powerMeter">
+                        <div class="power"></div>
+                    </div>
+                </section>
+                <button class="pauseButton">||</button>
+            </header>
             <div class="pauseOverlay">
-                <div class="overlayText">Pause</div>
+                <h2 class="logo">Paused</h2>
+                <ul class="menu">
+                    <li><button menuaction="resume">Resume</button></li>
+                    <li><button menuaction="optionsScreen">Options</button></li>
+                    <li><button menuaction="mainMenu">Return to Main Menu</button></li>
+                </ul>
             </div>
             <div class="loadOverlay">
-                <div class="overlayText">Loading...</div>
+                <div class="loadingMessage logo">Loading...</div>
                 <progress></progress>
             </div>
         </div>

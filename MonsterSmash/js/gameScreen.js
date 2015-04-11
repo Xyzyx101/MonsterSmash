@@ -1,6 +1,7 @@
 ﻿ms.screens.gameScreen = (function () {
     "use strict";
-    var backgroundLayer = null
+    var initialized
+        , backgroundLayer = null
         , resources = []
         , currentLevel = null
         , baseSize = { width: 1024, height: 768 } // this is an arbitrary value for the art
@@ -14,29 +15,49 @@
         , bgCanvas
         , bgCtx
         , buildingQuadtree
+        , scoreElement
+        , powerMeterElement
+        , displayScore
     ;
 
     function run() {
+        if (ms.gameManager.levelLoaded) {
+            return;
+        }
+
+        if (!initialized) {
+            initPauseOverlay();
+            initUI();
+            initialized = true;
+        }
+        
         var $ = ms.dom.$;
         var gameElement = $("#gameScreen")[0];
         var elementBounds = gameElement.getBoundingClientRect();
         gameScale = calculateScale(elementBounds);
 
-        canvas = document.createElement("canvas");
-        ms.dom.addClass(canvas, "gameLayer");
-        ctx = canvas.getContext("2d");
-        canvas.width = baseSize.width * gameScale;
-        canvas.height = baseSize.height * gameScale;
-        ctx.scale(gameScale, gameScale);
-        gameElement.appendChild(canvas);
+        if (!$("#gameScreen .gameLayer")[0]) {
+            canvas = document.createElement("canvas");
+            ms.dom.addClass(canvas, "gameLayer");
+            ctx = canvas.getContext("2d");
+            canvas.width = baseSize.width * gameScale;
+            canvas.height = baseSize.height * gameScale;
+            ctx.scale(gameScale, gameScale);
+            gameElement.appendChild(canvas);
+        }
 
-        bgCanvas = document.createElement("canvas");
-        ms.dom.addClass(bgCanvas, "backgroundLayer");
-        bgCtx = bgCanvas.getContext("2d");
-        bgCanvas.width = baseSize.width * gameScale;
-        bgCanvas.height = baseSize.height * gameScale;
-        bgCtx.scale(gameScale, gameScale);
-        gameElement.appendChild(bgCanvas);
+        if (!$("#gameScreen .backgroundLayer")[0]) {
+            bgCanvas = document.createElement("canvas");
+            ms.dom.addClass(bgCanvas, "backgroundLayer");
+            bgCtx = bgCanvas.getContext("2d");
+            bgCanvas.width = baseSize.width * gameScale;
+            bgCanvas.height = baseSize.height * gameScale;
+            bgCtx.scale(gameScale, gameScale);
+            gameElement.appendChild(bgCanvas);
+        }
+
+        var gameHeader = $("#gameScreen header")[0];
+        gameHeader.style.width = canvas.width + "px";
 
         loadLevel();
     }
@@ -66,6 +87,7 @@
         killTick();
         entities = [];
         resources = [];
+        buildings = [];
         levelSize = level.levelSize;
         backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background);
         var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
@@ -91,6 +113,7 @@
             if (loaded.length === resources.length) {
                 //killTick();
                 hideLoadOverlay();
+                ms.gameManager.levelLoaded = true;
                 frameRequestId = window.requestAnimationFrame(tick);
             } else {
                 setTimeout(verifyAllResourcesLoaded, 0);
@@ -98,7 +121,6 @@
             }
         }
         setTimeout(verifyAllResourcesLoaded, 0);
-        unpause();
     }
 
     function addResource(resource, path, image) {
@@ -148,6 +170,7 @@
             totalTime -= fixedUpdateTime;
         }
         leftOverTime = totalTime;
+        updateUI();
     }
 
     function render() {
@@ -175,15 +198,53 @@
         var $ = ms.dom.$;
         var overlay = $("#gameScreen .loadOverlay")[0];
         overlay.style.display = "block";
+        if (canvas) {
+            canvas.style.display = "none";
+            bgCanvas.style.display = "none";
+        }
     }
 
     function hideLoadOverlay() {
         var $ = ms.dom.$;
         var overlay = $("#gameScreen .loadOverlay")[0];
         overlay.style.display = "none";
+        if (canvas) {
+            canvas.style.display = "block";
+            bgCanvas.style.display = "block";
+        }
+    }
+
+    function initPauseOverlay() {
+        ms.dom.bind("#gameScreen .pauseButton", "click", pause);
+        ms.dom.bind("#gameScreen ul.menu", "click", function (e) {
+            if (e.target.nodeName.toLowerCase() === "button") {
+                var action = e.target.getAttribute("menuAction");
+                menuAction(action);
+            }
+        });
+        ms.dom.bind(".pauseOverlay", "click", unpause);
+    }
+
+    function menuAction(action) {
+        switch (action) {
+            case "resume":
+                unpause();
+                break;
+            case "optionsScreen":
+                ms.showScreen("optionsScreen");
+                break;
+            case "mainMenu":
+                ms.gameManager.levelLoaded = false;
+                var $ = ms.dom.$;
+                var overlay = $("#gameScreen .pauseOverlay")[0];
+                overlay.style.display = "none";
+                ms.showScreen("mainMenu");
+                break;
+        }
     }
 
     function pause() {
+        killTick();
         var $ = ms.dom.$;
         var overlay = $("#gameScreen .pauseOverlay")[0];
         overlay.style.display = "block";
@@ -193,12 +254,44 @@
         var $ = ms.dom.$;
         var overlay = $("#gameScreen .pauseOverlay")[0];
         overlay.style.display = "none";
+        window.requestAnimationFrame(function (tickTime) {
+            lastTick = tickTime;
+            frameRequestId = window.requestAnimationFrame(tick);
+        });
+    }
+
+    function initUI() {
+        scoreElement = ms.dom.$("#gameScreen .score")[0];
+        powerMeterElement = ms.dom.$("#gameScreen .power")[0];
+        displayScore = ms.gameManager.getScore();
+        updateUI();
+    }
+
+    function updateUI() {
+        var powerPercent = ms.gameManager.getPower() / ms.gameManager.MAX_POWER;
+        var color1 = { r: 96, g: 168, b: 8 };
+        var color2 = { r: 255, g: 6, b: 6 };
+        var r = Math.floor(color1.r * powerPercent + color2.r * (1 - powerPercent))
+            , g = Math.floor(color1.g * powerPercent + color2.g * (1 - powerPercent))
+            , b = Math.floor(color1.b * powerPercent + color2.b * (1 - powerPercent))
+        ;
+        r = Math.max(0, Math.min(r, 255));
+        g = Math.max(0, Math.min(g, 255));
+        b = Math.max(0, Math.min(b, 255));
+        powerMeterElement.style.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+        powerMeterElement.style.width = Math.ceil(powerPercent * 100) + "%";
+        var score = ms.gameManager.getScore();
+        if (score > displayScore) {
+            var newDisplayScore = Math.ceil((score - displayScore) * 0.1);
+            displayScore = Math.min(displayScore + newDisplayScore, score);
+            scoreElement.innerHTML = displayScore;
+        }
     }
 
     return {
         run: run
-        , loadLevel: loadLevel
-        , addResource: addResource
-        , baseSize: baseSize
+, loadLevel: loadLevel
+, addResource: addResource
+, baseSize: baseSize
     };
 })();

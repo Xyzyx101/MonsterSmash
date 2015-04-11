@@ -1,105 +1,220 @@
-﻿body
-{
-    -webkit-touch-callout : none;
-    -webkit-tap-highlight-color : rgba(0,0,0,0);
-    -webkit-text-size-adjust : none;
-    -moz-text-size-adjust : none;
-    -ms-text-size-adjust : none;
-    text-size-adjust : none;
-    -webkit-user-select : none;
-    -ms-user-select : none;
-    -moz-user-select : none;
-    user-select : none;
-    margin : 0;
-    overflow : hidden;
+﻿@font-face {
+    font-family: "RupturedSans";
+    font-weight: normal;
+    font-style: normal;
+    src: url("../fonts/RupturedSans.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "BrokenGlass";
+    font-weight: normal;
+    font-style: normal;
+    src: url("../fonts/BrokenGlass.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Roboto-Condensed";
+    font-weight: normal;
+    font-style: normal;
+    src: url("../fonts/RobotoCondensed-Regular.ttf") format("truetype");
+}
+
+body {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    text-size-adjust: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    margin: 0;
+    overflow: hidden;
+}
+
+.logo {
+    font-family: RupturedSans, Arial, sans-serif;
+    /*font-family: BreakAway, Arial, sans-serif;*/
+    font-size: 2.5em;
+    line-height: 0.88em;
+    margin: 1em auto 0.5em;
+    text-align: center;
+    color: rgb(28, 37, 217);
+    text-shadow: 0.03em 0.03em 0.05em rgb(153, 2, 5), -0.03em -0.03em 0.03em rgb(128, 132, 227), 0.12em 0.18em 0.1em rgb(60,1,1);
 }
 
 #game {
-    position : absolute;
-    left : 0;
-    top : 0;
-    /*
-    width : 16em;
-    height : 12em;
-    */
-    width:100%;
-    height:100%;
-    background-color : rgb(34, 16, 6);
-    font-family : Arial;
-    font-size : 40px;
-    color : rgb(0, 0, 0);
-    background:
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(1, 17, 0);
+    font-family: Roboto-Condensed, Arial, sans-serif;
+    font-size: 40px;
+    color: rgb(0, 0, 0);
+    background-image: url("../images/DragonScale.png");
+    /*background:
         radial-gradient(circle at 0 50%, rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px) 0 10px,
         radial-gradient(at 100% 100%,     rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px), #006016;
-    background-size: 20px 20px;
+    background-size: 20px 20px;*/
 }
 
-#game .screen {
-    position : absolute;
-    width : 100%;
-    height : 100%;
-    display : none;
-    z-index : 10;
-}
+    #game .screen {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 10;
+    }
 
-#game .screen.active {
-    display : block;
+        #game .screen.active {
+            display: block;
+        }
+
+.continue {
+    font-family: Roboto-Condensed, Arial, sans-serif;
+    color: rgb(7, 168, 172);
+    text-shadow: 0.2em 0.2em 0.3em rgb(60,1,1);
+    text-align: center;
 }
 
 #splash-screen {
-    text-align : center;
-    padding-top : 2.5em;
+    text-align: center;
+    padding-top: 2.5em;
 }
 
 #main-menu {
-    padding-top : 1em;
+    padding-top: 1em;
 }
 
 ul.menu {
-    text-align : center;
-    padding : 0;
-    margin : 0;
-    list-style : none;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
 }
 
-ul.menu li {
-    margin : 0.8em 0;
-}
+    ul.menu li {
+        margin: 0.2em 0;
+    }
 
-ul.menu li button,
-.screen button {
-    font-family : Slackey, sans-serif;
-    font-size : 0.6em;
-    color : rgb(100,120,0);
-    width : 10em;
-    height : 1.5em;
-    background : rgb(10,20,0);
-    border : 0.1em solid rgb(255, 255, 0);
-    border-radius : 0.5em;
-    box-shadow : 0.2em 0.2em 0.3em rgb(90,0,0);
-}
+        ul.menu li button,
+        .screen button {
+            font-family: Roboto-Condensed, Arial, sans-serif;
+            font-size: 0.6em;
+            color: rgb(28,217,217);
+            width: 10em;
+            height: 1.5em;
+            background: rgb(17, 22, 203);
+            border: 0.1em solid rgb(7, 168, 172);
+            border-radius: 0.5em;
+            box-shadow: 0.2em 0.2em 0.3em rgb(60,1,1);
+        }
 
-ul.menu li button:hover,
-.screen button:hover {
-    background : rgb(30,40,0);
-}
+            ul.menu li button:hover,
+            .screen button:hover {
+                color: rgb(128,227,227);
+                background: rgb(28,37,217);
+            }
 
-ul.menu li button:active,
-.screen button:active {
-    color : rgb(255,255,0);
-    background : rgb(30,40,0);
-}
+            ul.menu li button:active,
+            .screen button:active {
+                color: rgb(28,37,217);
+                background: rgb(168,6,6);
+            }
 
 #splash-screen .continue {
-    cursor : pointer;
-    font-size : 0.75em;
-    display : none;
+    cursor: pointer;
+    font-size: 0.75em;
+    display: none;
 }
 
-#gameScreen footer {
+#gameScreen header {
+    z-index: 100;
     position: absolute;
-    bottom: 0;
+    top: 0;
+    width: 100%;
+    height: 2.25em;
+    background: rgba(60, 1, 1, 0.3);
 }
+
+    #gameScreen header button.pauseButton {
+        float: right;
+        margin: 0.6em 0.3em;
+        font-family: Roboto-Condensed, Arial, sans-serif;
+        font-size: 0.6em;
+        color: rgb(233,188,4);
+        width: 2em;
+        height: 2em;
+        background: rgb(17, 22, 203);
+        border: 0.1em solid rgb(233,188,4);
+        border-radius: 1.5em;
+        box-shadow: -0.05em -0.05em 0.4em rgb(236,210,37),0.1em 0.1em 0.25em rgb(60,1,1);
+    }
+
+        #gameScreen header button.pauseButton:hover {
+            color: rgb(128,227,227);
+            background: rgb(28,37,217);
+        }
+
+        #gameScreen header button.pauseButton:active {
+            color: rgb(28,37,217);
+            background: rgb(168,6,6);
+        }
+
+    #gameScreen header #scoreSection {
+        margin: 0.1em 0.3em;
+        width: 15%;
+        float: left;
+    }
+
+        #gameScreen header #scoreSection .scoreLabel {
+            font-size: 0.6em;
+            color: rgb(239, 207, 6);
+            display: block;
+            text-shadow: -0.05em -0.05em 0.4em rgb(236,210,37),0.1em 0.1em 0.25em rgb(60,1,1);
+        }
+
+        #gameScreen header #scoreSection .score {
+            font-size: 0.85em;
+            color: rgb(239, 207, 6);
+            display: block;
+            line-height: 0.8em;
+            text-shadow: -0.05em -0.05em 0.4em rgb(236,210,37),0.1em 0.1em 0.25em rgb(60,1,1);
+        }
+
+    #gameScreen header #powerSection {
+        margin: 0.1em 0.3em;
+        width: 65%;
+        float: left;
+    }
+
+        #gameScreen header #powerSection .powerLabel {
+            font-size: 0.6em;
+            color: rgb(96, 168, 8);
+            display: block;
+            margin: 0 auto;
+            text-align: center;
+            text-shadow: -0.05em -0.05em 0.4em rgb(124,179,57),0.1em 0.1em 0.25em rgb(60,1,1);
+        }
+
+        #gameScreen header #powerSection .powerMeter {
+            height: 0.6em;
+            border: 0.1em solid rgb(96, 168, 8);
+            border-radius: 0.2em;
+            box-shadow: -0.05em -0.05em 0.25em rgb(124,179,57),0.1em 0.1em 0.25em rgb(60,1,1);
+        }
+
+        #gameScreen header #powerSection .power {
+            background: rgb(96, 168, 8);
+            height: 100%;
+            width: 50%;
+            border-radius: 0.2em;
+            box-shadow: inset -0.05em -0.05em 0.4em rgb(6,6,1);
+        }
 
 #gameScreen canvas {
     position: absolute;
@@ -107,32 +222,33 @@ ul.menu li button:active,
 
 #gameScreen .backgroundLayer {
     z-index: -100;
+    display: block;
+    top: 0;
+    position: absolute;
 }
 
 #gameScreen .loadOverlay {
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 100;
-    background:
-        radial-gradient(circle at 0 50%, rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px) 0 10px,
-        radial-gradient(at 100% 100%,     rgba(96, 16, 48, 0) 9px, #b2561d 10px, rgba(96, 16, 48, 0) 11px), #006016;
-    background-size: 20px 20px;
+    z-index: 1000;
+    background: rgba(60, 1, 1, 0.25);
 }
 
 #gameScreen .pauseOverlay {
     position: absolute;
+    display: none;
     width: 100%;
     height: 100%;
-    z-index: 100;
-    background : rgba(20, 0, 20, 0.8);
+    z-index: 1000;
+    background: rgba(60, 1, 1, 0.5);
 }
 
-.overlayText {
+.loadingMessage {
     display: block;
     position: relative;
     width: 5em;
-    top: 35%;
+    top: 25%;
     -ms-transform: translateY(-35%);
     -webkit-transform: translateY(-35%);
     -moz-transform: translateY(-35%);
@@ -154,17 +270,17 @@ progress {
 
 /* force portrait mode */
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:portrait) {
-  body {
-    -webkit-transform: rotate(90deg);
-    -ms-transform: rotate(-90deg);
-    -moz-transform: rotate(-90deg);
-    -o-transform: rotate(-90deg);
-    transform: rotate(-90deg);
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+    body {
+        -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }

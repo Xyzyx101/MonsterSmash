@@ -9,9 +9,9 @@
     };
 
     function createBuilding(ctx, buildingStyle, xPos, size) {
-        var buildingImagePath = ms.buildingFactory.styles[buildingStyle].image
-            , tileHP = ms.buildingFactory.styles[buildingStyle].tileHP
-            , tileSize = ms.buildingFactory.styles[buildingStyle].tileSize
+        var buildingImagePath = ms.buildingStyles[buildingStyle].image
+            , tileHP = ms.buildingStyles[buildingStyle].tileHP
+            , tileSize = ms.buildingStyles[buildingStyle].tileSize
             , location = {}
         ;
 

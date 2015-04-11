@@ -3,7 +3,11 @@
 
     function run() {
         ms.dom.bind("#optionsScreen .return", "click", function (e) {
-            ms.showScreen("mainMenu");
+            if (ms.gameManager.levelLoaded) {
+                ms.showScreen("gameScreen");
+            } else {
+                ms.showScreen("mainMenu");
+            }
         });
 
     }
