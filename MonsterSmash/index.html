@@ -27,7 +27,8 @@
             ms.loadModule("js/FSMComponent.js");
             ms.loadModule("js/buildingFactory.js");
             ms.loadModule("js/buildingStyles.js");
-            ms.loadModule("js/Quadtree.js")
+            ms.loadModule("js/Quadtree.js");
+            ms.loadModule("js/levelCompleteScreen.js");
         });
     </script>
 </head>
@@ -45,7 +46,7 @@
                 <li><button menuaction="highScoreScreen">Highscore</button></li>
                 <li><button menuaction="optionsScreen">Options</button></li>
                 <li><button menuaction="aboutScreen">About</button></li>
-                <li><button menuaction="">Exit</button></li>
+                <li><button menuaction="levelComplete">Exit</button></li>
             </ul>
         </div>
         <div id="gameScreen" class="screen">
@@ -86,6 +87,20 @@
         <div id="aboutScreen" class="screen">
             <h2 class="logo">About</h2>
             <button class="return">Return</button>
+        </div>
+        <div id="levelCompleteScreen" class="screen">
+            <h2 class="logo">Level Complete!</h2>
+            <section id="scoreSection">
+                <span class="scoreLabel">Score</span>
+                <span class="score">00000</span>
+            </section>
+            <section id="powerSection">
+                <span class="powerLabel">Power</span>
+                <div class="powerMeter">
+                    <div class="power"></div>
+                </div>
+            </section>
+            <button class="nextButton">Next Level</button>
         </div>
     </div>
 </body>
