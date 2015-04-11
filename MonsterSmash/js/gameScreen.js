@@ -18,6 +18,8 @@
         , scoreElement
         , powerMeterElement
         , displayScore
+        , groundLevel = baseSize.height - 32
+        , gravity = 1
     ;
 
     function run() {
@@ -30,7 +32,7 @@
             initUI();
             initialized = true;
         }
-        
+
         var $ = ms.dom.$;
         var gameElement = $("#gameScreen")[0];
         var elementBounds = gameElement.getBoundingClientRect();
@@ -104,7 +106,7 @@
             ms.loadModule("sprites/" + sprites[spriteIndex] + ".js");
             var src = "sprites/" + sprites[spriteIndex] + ".png";
             if (!ms.imageManager.getImage(src)) {
-                var resource = { isLoaded: false };   
+                var resource = { isLoaded: false };
                 var loadHandler = function () {
                     this.isLoaded = true;
                 };
@@ -112,9 +114,9 @@
                 image.addEventListener("load", loadHandler.bind(resource), false);
                 image.src = src;
                 addResource(resource, image.src, image);
-            }      
+            }
         }
-        
+
         buildingQuadtree = new ms.Quadtree(0, { x: 0, y: 0, width: levelSize.width, height: levelSize.height });
 
         function isLoaded(element) {
@@ -307,10 +309,20 @@
         }
     }
 
+    function getGroundLevel() {
+        return groundLevel;
+    }
+
+    function getGravity() {
+        return gravity;
+    }
+
     return {
         run: run
-, loadLevel: loadLevel
-, addResource: addResource
-, baseSize: baseSize
+        , loadLevel: loadLevel
+        , addResource: addResource
+        , baseSize: baseSize
+        , getGroundLevel: getGroundLevel
+        , getGravity: getGravity
     };
 })();

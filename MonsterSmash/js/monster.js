@@ -1,49 +1,25 @@
 ﻿/* In game monster entity */
 ms.Monster = function (ctx, initialPosition) {
     "use strict";
-    var that = this;
 
-    var frameSize = {
-        width: 160
-        , height: 140
-    };
-    function getFrameSize() {
-        return frameSize;
-    }
-
-    var position = initialPosition;
-    function getPosition() {
-        return position;
-    }
-
-    // Bounding box is centered in x and at the bottom in y
-    var bbSize = {width:74, height:90};
-    var bbOffset = {
-        x: Math.floor((frameSize.width - bbSize.width) * 0.5)
-        , y: frameSize.height - bbSize.height
-    };
-
-    var flip = true;
-    var isStanding = false;
-
-    var maxVelocity = {
-        walk: 325,
-        run: 500,
-        fly: 750,
-        y: 800.0
-    };
-    var velocity = { x: 0, y: 0 };
-    var acceleration = {
-        walk: 0.5,
-        run: 0.75,
-        fly: 0.1
-    }; // horizontal acceleration
-    var gravity = 2.4; // vertical acceleration
-    var initialJumpVelocity = 750;
-    var holdJumpAcceleration = 200;
-
-    var jumpTimer = 0;
-    var maxHoldJumpTime = 10000;
+    var getHeld = ms.input.getHeld
+        , getPressed = ms.input.getPressed
+        , ACTION = ms.input.ACTION
+        , groundLevel = ms.screens.gameScreen.getGroundLevel()
+        , gravity = ms.screens.gameScreen.getGravity()
+        , frameSize = { width: 160, height: 140 }
+        , position = initialPosition
+        , bbSize = { width: 74, height: 90 }  // Bounding box is centered in x and at the bottom in y
+        , bbOffset = {
+            x: Math.floor((frameSize.width - bbSize.width) * 0.5)
+            , y: frameSize.height - bbSize.height
+        }
+        , flip = true
+        , isStanding = false
+        ,  vel = {x: 0, y: 0}
+        , walkSpeed = 5
+    ;
+    
     var renderComp = ms.RenderComponent.call(this, ctx, "sprites/monsterSprite.png", ms.spriteData.monsterSprite, 40, frameSize);
     var frames =
     renderComp.addAnim(new ms.Anim(
@@ -81,55 +57,72 @@ ms.Monster = function (ctx, initialPosition) {
             , "MonsterAnim_Walk.0045.png"
             , "MonsterAnim_Walk.0046.png"
             , "MonsterAnim_Walk.0047.png"]
-        , [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
+        , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
     ));
 
 
     var FSM = ms.FSMComponent.call(this);
-    FSM.addState("test01",
+    FSM.addState("Idle",
         {
             before: function () {
-                //console.log("init test state");
                 renderComp.changeAnim("Idle");
-                jumpTimer = maxHoldJumpTime;
+                vel.x = 0;
             }
             , state: function (dt) {
-                //console.log("test state")
-                jumpTimer -= dt;
-                if (jumpTimer <= 0) {
-                    FSM.changeState("test02");
+                if (getHeld(ACTION.RIGHT)) {
+                    vel.x = walkSpeed;
+                    FSM.changeState("Walk");
+                } else if (getHeld(ACTION.LEFT)) {
+                    vel.x = -walkSpeed;
+                    FSM.changeState("Walk");
                 }
+                fall();
             }
             , after: function () {
-                //console.log("cleanup test state");
+                if (vel.x < 0) {
+                    flip = true;
+                } else {
+                    flip = false;
+                }
             }
         });
-    FSM.addState("test02",
+    FSM.addState("Walk",
         {
             before: function () {
-                //console.log("init test02 state");
                 renderComp.changeAnim("Walk");
-                jumpTimer = maxHoldJumpTime;
             }
             , state: function (dt) {
-                //console.log("test02 state")
-                jumpTimer -= dt;
-                if (jumpTimer <= 0) {
-                    FSM.changeState("test01");
+                if (getHeld(ACTION.RIGHT)) {
+                    vel.x = walkSpeed;
+                } else if (getHeld(ACTION.LEFT)) {
+                    vel.x = -walkSpeed;
+                } else {
+                    FSM.changeState("Idle");
                 }
+                fall();
             }
             , after: function () {
-                //console.log("cleanup test02 state");
+
             }
         });
-    FSM.changeState("test01");
+    FSM.changeState("Idle");
 
     function update(dt) {
         FSM.update(dt);
+        position.x += vel.x;
+        position.y += vel.y;
         renderComp.animate(dt);
     }
     function render() {
-        renderComp.displayAnim(position.x, position.y);
+        if (flip) {
+            ctx.save();
+            ctx.scale(-1, 1);
+            renderComp.displayAnim(-(position.x + frameSize.width), position.y);
+            ctx.restore();
+        } else {
+            renderComp.displayAnim(position.x, position.y);
+        }
+        
         debugDraw();
     }
 
@@ -140,6 +133,28 @@ ms.Monster = function (ctx, initialPosition) {
         ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
         ctx.fillRect(position.x + bbOffset.x, position.y + bbOffset.y, bbSize.width, bbSize.height);
         ctx.restore();
+    }
+
+    function fall() {
+        if (isStanding) {
+            vel.y = 0;
+        } else {
+            vel.y += gravity;
+            if (position.y + frameSize.height > groundLevel) {
+                vel.y = 0;
+                isStanding = true;
+                position.y = groundLevel - frameSize.height;
+            }
+        }
+    }
+
+    function getFrameSize() {
+        return frameSize;
+    }
+
+
+    function getPosition() {
+        return position;
     }
 
     return {
