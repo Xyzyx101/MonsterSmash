@@ -87,3 +87,6 @@
         , showScreen: showScreen
     };
 })();
+
+ms.spriteData = {};
+ms.levels = {};

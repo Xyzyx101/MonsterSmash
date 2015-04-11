@@ -2,10 +2,10 @@
  * It is added to a game entity by chaining the contructors
  * 
  *      someGameObject = function () {
- *          ms.Entity.call(this, "./images/foo.png", 350, {width:64, height:32});
+ *          ms.Entity.call(this, "./images/foo.png", spriteData, 350, {width:64, height:32});
  *      }
  */
-ms.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) {
+ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize) {
     "use strict";
     var image;
 
@@ -64,24 +64,26 @@ ms.RenderComponent = function (ctx, src, newFrameDelay, newFrameSize) {
         if (found === true) {
             currentAnim = animations[index];
         } else {
-            console.log("Error " + newAnim + " not found!");
+            console.error("Error " + newAnim + " not found!");
         }
     }
 
     function displayAnim(dx, dy) {
-        var myFrame = currentAnim.playOrder[currentFrame];
-        var sx = currentAnim.frames[myFrame].x;
-        var sy = currentAnim.frames[myFrame].y;
+        var frame = currentAnim.playOrder[currentFrame];
+        var frameData = spriteData.frames[currentAnim.frames[frame]];
+        var frameOffsetX = frameData.spriteSourceSize.x;
+        var frameOffsetY = frameData.spriteSourceSize.y;
         ctx.drawImage(
-            image,
-            sx,
-            sy,
-            frameSize.width,
-            frameSize.height,
-            dx,
-            dy,
-            frameSize.width,
-            frameSize.height);
+            image
+            , frameData.frame.x
+            , frameData.frame.y
+            , frameData.frame.w
+            , frameData.frame.h
+            , dx + frameOffsetX
+            , dy + frameOffsetY
+            , frameData.frame.w
+            , frameData.frame.h
+        );
     }
 
     return {

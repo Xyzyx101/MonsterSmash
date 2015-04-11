@@ -90,16 +90,31 @@
         buildings = [];
         levelSize = level.levelSize;
         backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background);
-        var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
-        for (var i = 0, len = level.buildings.length; i < len; ++i) {
+        for (var building = 0, len = level.buildings.length; building < len; ++building) {
             var newBuilding = ms.buildingFactory.createBuilding(
                                     ctx
-                                    , level.buildings[i].buildingStyle
-                                    , level.buildings[i].xPos
-                                    , level.buildings[i].size
+                                    , level.buildings[building].buildingStyle
+                                    , level.buildings[building].xPos
+                                    , level.buildings[building].size
                               );
             buildings.push(newBuilding);
         }
+        var sprites = level.resources.sprites;
+        for (var spriteIndex = 0, len = sprites.length; spriteIndex < len; ++spriteIndex) {
+            ms.loadModule("sprites/" + sprites[spriteIndex] + ".js");
+            var src = "sprites/" + sprites[spriteIndex] + ".png";
+            if (!ms.imageManager.getImage(src)) {
+                var resource = { isLoaded: false };   
+                var loadHandler = function () {
+                    this.isLoaded = true;
+                };
+                var image = new Image();
+                image.addEventListener("load", loadHandler.bind(resource), false);
+                image.src = src;
+                addResource(resource, image.src, image);
+            }      
+        }
+        
         buildingQuadtree = new ms.Quadtree(0, { x: 0, y: 0, width: levelSize.width, height: levelSize.height });
 
         function isLoaded(element) {
@@ -110,8 +125,8 @@
          * onLoad events attached to each resource.  A regular loop would block.*/
         function verifyAllResourcesLoaded() {
             var loaded = resources.filter(isLoaded);
-            if (loaded.length === resources.length) {
-                //killTick();
+            if (loaded.length === resources.length && ms.resourcesLoaded() === 1) {
+                startLevel(level);
                 hideLoadOverlay();
                 ms.gameManager.levelLoaded = true;
                 frameRequestId = window.requestAnimationFrame(tick);
@@ -121,6 +136,10 @@
             }
         }
         setTimeout(verifyAllResourcesLoaded, 0);
+    }
+
+    function startLevel(level) {
+        var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
     }
 
     function addResource(resource, path, image) {

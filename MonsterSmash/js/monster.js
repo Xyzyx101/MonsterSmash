@@ -4,7 +4,7 @@ ms.Monster = function (ctx, initialPosition) {
     var that = this;
 
     var frameSize = {
-        width: 64
+        width: 160
         , height: 140
     };
     function getFrameSize() {
@@ -16,14 +16,12 @@ ms.Monster = function (ctx, initialPosition) {
         return position;
     }
 
-    /*
     // Bounding box is centered in x and at the bottom in y
-    var bbSize = {width:46, height:56};
-    var bbOffset = {x:9, y:8};
-    var bb = new sm3.BoundingBox(position, frameSize, bbSize, bbOffset);
-    this.getBoundingBox = function () {
-        return bb;
-    };*/
+    var bbSize = {width:74, height:90};
+    var bbOffset = {
+        x: Math.floor((frameSize.width - bbSize.width) * 0.5)
+        , y: frameSize.height - bbSize.height
+    };
 
     var flip = true;
     var isStanding = false;
@@ -45,27 +43,54 @@ ms.Monster = function (ctx, initialPosition) {
     var holdJumpAcceleration = 200;
 
     var jumpTimer = 0;
-    var maxHoldJumpTime = 400;
+    var maxHoldJumpTime = 10000;
+    var renderComp = ms.RenderComponent.call(this, ctx, "sprites/monsterSprite.png", ms.spriteData.monsterSprite, 40, frameSize);
+    var frames =
+    renderComp.addAnim(new ms.Anim(
+        "Idle"
+        , ["MonsterAnim_Idle.0000.png"
+            , "MonsterAnim_Idle.0001.png"
+            , "MonsterAnim_Idle.0002.png"
+            , "MonsterAnim_Idle.0003.png"
+            , "MonsterAnim_Idle.0004.png"]
+        , [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1]
+    ));
+    renderComp.addAnim(new ms.Anim(
+        "Walk"
+        , ["MonsterAnim_Walk.0024.png"
+            , "MonsterAnim_Walk.0025.png"
+            , "MonsterAnim_Walk.0026.png"
+            , "MonsterAnim_Walk.0027.png"
+            , "MonsterAnim_Walk.0028.png"
+            , "MonsterAnim_Walk.0029.png"
+            , "MonsterAnim_Walk.0030.png"
+            , "MonsterAnim_Walk.0031.png"
+            , "MonsterAnim_Walk.0032.png"
+            , "MonsterAnim_Walk.0033.png"
+            , "MonsterAnim_Walk.0034.png"
+            , "MonsterAnim_Walk.0035.png"
+            , "MonsterAnim_Walk.0036.png"
+            , "MonsterAnim_Walk.0037.png"
+            , "MonsterAnim_Walk.0038.png"
+            , "MonsterAnim_Walk.0039.png"
+            , "MonsterAnim_Walk.0040.png"
+            , "MonsterAnim_Walk.0041.png"
+            , "MonsterAnim_Walk.0042.png"
+            , "MonsterAnim_Walk.0043.png"
+            , "MonsterAnim_Walk.0044.png"
+            , "MonsterAnim_Walk.0045.png"
+            , "MonsterAnim_Walk.0046.png"
+            , "MonsterAnim_Walk.0047.png"]
+        , [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
+    ));
 
-    var renderComp = ms.RenderComponent.call(this, ctx, "./images/monster01.png", 100, frameSize);
-    renderComp.addAnim(new ms.Anim(
-        "TestAnim01"
-        , [{ x: 0, y: 0 }, { x: frameSize.width, y: 0 }]
-        , [0, 1, 1, 1]
-        )
-    );
-    renderComp.addAnim(new ms.Anim(
-        "TestAnim02"
-        , [{ x: 0, y: 0 }, { x: frameSize.width, y: 0 }]
-        , [0, 1, 0, 1]
-        )
-    );
+
     var FSM = ms.FSMComponent.call(this);
     FSM.addState("test01",
         {
             before: function () {
                 //console.log("init test state");
-                renderComp.changeAnim("TestAnim01");
+                renderComp.changeAnim("Idle");
                 jumpTimer = maxHoldJumpTime;
             }
             , state: function (dt) {
@@ -83,7 +108,7 @@ ms.Monster = function (ctx, initialPosition) {
         {
             before: function () {
                 //console.log("init test02 state");
-                renderComp.changeAnim("TestAnim02");
+                renderComp.changeAnim("Walk");
                 jumpTimer = maxHoldJumpTime;
             }
             , state: function (dt) {
@@ -105,6 +130,16 @@ ms.Monster = function (ctx, initialPosition) {
     }
     function render() {
         renderComp.displayAnim(position.x, position.y);
+        debugDraw();
+    }
+
+    function debugDraw() {
+        ctx.save();
+        ctx.strokeStyle = "rgb(255,255,0)";
+        ctx.strokeRect(position.x, position.y, frameSize.width, frameSize.height);
+        ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+        ctx.fillRect(position.x + bbOffset.x, position.y + bbOffset.y, bbSize.width, bbSize.height);
+        ctx.restore();
     }
 
     return {

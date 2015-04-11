@@ -4,13 +4,12 @@
         , power
         , MAX_POWER = 1000
         , isDead = false
-        , levels = {}
         , levelMap = []
         , levelLoaded = false
     ;
 
     function init() {
-        levelMap[0] = levels.level00;
+        levelMap[0] = ms.levels.level00;
     }
 
     function startNewGame() {
@@ -61,7 +60,6 @@
         , endGame: endGame
         , completeLevel: completeLevel
         , isDead: isDead
-        , levels: levels
         , getScore: getScore
         , setScore: setScore
         , addScore: addScore
