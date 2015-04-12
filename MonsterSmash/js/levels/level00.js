@@ -1,6 +1,6 @@
 ﻿ms.levels.level00 = {
     levelSize: {
-        width: 1024
+        width: 2048
         ,height: 768
     }
     , playerSpawn: {
@@ -8,7 +8,7 @@
         , y: 100
     }
     , background: {
-        image: "images/backgrounds/MonsterSmash-Scale-Test.png"
+        image: "images/backgrounds/Background01-half.png"
         , color: { r: 0, g: 0, b: 0 }
     }
     , resources: {

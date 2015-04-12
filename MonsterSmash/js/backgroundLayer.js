@@ -1,13 +1,13 @@
 ﻿/* This draws the static background layer.  It can be an image or a static colour.  Parallax effects cound be added to the layer in the future */
 
-ms.BackgroundLayer = function (ctx, background) {
+ms.BackgroundLayer = function (ctx, background, levelSize) {
     "use strict";
     var staticBackgroundColor = null
-        , size = {
-            width: ctx.canvas.width
-            , height: ctx.canvas.height
-        }
+        , canvasSize = { width: ctx.canvas.width, height: ctx.canvas.height }
+        , imageScale = {x:0,y:0};
     ;
+
+    
 
     if (background.image) {
         var image;
@@ -20,6 +20,10 @@ ms.BackgroundLayer = function (ctx, background) {
         } else {
             this.isLoaded = false;
             var loadHandler = function () {
+                imageScale = {
+                    x: levelSize.width / image.width
+                    , y: levelSize.height / image.height
+                }
                 this.isLoaded = true;
             };
             image = new Image();
@@ -38,10 +42,13 @@ ms.BackgroundLayer = function (ctx, background) {
 
     function render() {
         if (background.image) {
+            ctx.save();
+            ctx.scale(imageScale.x, imageScale.y);
             ctx.drawImage(image, 0, 0);
+            ctx.restore();
         } else {
             ctx.fillStyle = staticBackgroundColor;
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
         }
     }
 

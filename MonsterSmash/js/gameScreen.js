@@ -92,7 +92,7 @@
         resources = [];
         buildings = [];
         levelSize = level.levelSize;
-        backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background);
+        backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background, levelSize);
         for (var building = 0, len = level.buildings.length; building < len; ++building) {
             var newBuilding = ms.buildingFactory.createBuilding(
                                     ctx
