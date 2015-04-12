@@ -122,14 +122,20 @@
                 this.nodes[i].debugDraw(ctx);
             }
         }
+        var cameraOffset = ms.screens.gameScreen.getCameraOffset();
         ctx.save();
         ctx.strokeStyle = "rgba(255,0,255,0.7)";
         ctx.fillStyle = "rgba(255, 0, 255, 0.2)";
-        ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+        ctx.strokeRect(
+            this.bounds.x - cameraOffset.x
+            , this.bounds.y - cameraOffset.y
+            , this.bounds.width
+            , this.bounds.height
+        );
         for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {   
             ctx.fillRect(
-                this.colliders[colliderIndex].x
-                , this.colliders[colliderIndex].y
+                this.colliders[colliderIndex].x - cameraOffset.x
+                , this.colliders[colliderIndex].y - cameraOffset.y
                 , this.colliders[colliderIndex].width
                 , this.colliders[colliderIndex].height
             );
@@ -141,9 +147,15 @@
     ms.Quadtree.prototype.retrieve = function (collider, hits, ctx) {
         hits = hits || [];
         if (ctx) {
+            var cameraOffset = ms.screens.gameScreen.getCameraOffset();
             ctx.save();
             ctx.strokeStyle = "rgba(0, 255, 255, 0.85)";
-            ctx.strokeRect(collider.x, collider.y, collider.width, collider.height);
+            ctx.strokeRect(
+                collider.x - cameraOffset.x
+                , collider.y - cameraOffset.y
+                , collider.width
+                , collider.height
+            );
             ctx.restore();
         }
        
@@ -173,14 +185,20 @@
             }
         }
         if (ctx) {
+            var cameraOffset = ms.screens.gameScreen.getCameraOffset();
             ctx.save();
             ctx.strokeStyle = "rgba(255, 255, 0, 0.7)";
             ctx.fillStyle = "rgba(255, 255, 0, 0.2)";
-            ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            ctx.strokeRect(
+                this.bounds.x - cameraOffset.x
+                , this.bounds.y - cameraOffset.y
+                , this.bounds.width
+                , this.bounds.height
+            );
             for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {
                 ctx.fillRect(
-                    this.colliders[colliderIndex].x
-                    , this.colliders[colliderIndex].y
+                    this.colliders[colliderIndex].x - cameraOffset.x
+                    , this.colliders[colliderIndex].y - cameraOffset.y
                     , this.colliders[colliderIndex].width
                     , this.colliders[colliderIndex].height
                 );

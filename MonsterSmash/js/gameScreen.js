@@ -21,6 +21,7 @@
         , groundLevel = baseSize.height - 32
         , gravity = 1
         , monster
+        , camera
     ;
 
     function run() {
@@ -61,7 +62,6 @@
 
         var gameHeader = $("#gameScreen header")[0];
         gameHeader.style.width = canvas.width + "px";
-
         loadLevel();
     }
 
@@ -142,7 +142,8 @@
     }
 
     function startLevel(level) {
-        monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
+        monster = registerEntity(new ms.Monster(ctx, level.playerSpawn, levelSize));
+        camera = new ms.Camera(monster, levelSize, baseSize);
     }
 
     function addResource(resource, path, image) {
@@ -193,6 +194,7 @@
         }
         leftOverTime = totalTime;
         updateUI();
+        camera.update();
     }
 
     function render() {
@@ -321,6 +323,10 @@
         return gravity;
     }
 
+    function getCameraOffset() {
+        return camera.getOffset();
+    }
+
     return {
         run: run
         , loadLevel: loadLevel
@@ -328,5 +334,6 @@
         , baseSize: baseSize
         , getGroundLevel: getGroundLevel
         , getGravity: getGravity
+        , getCameraOffset: getCameraOffset
     };
 })();

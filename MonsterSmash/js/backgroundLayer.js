@@ -7,8 +7,6 @@ ms.BackgroundLayer = function (ctx, background, levelSize) {
         , imageScale = {x:0,y:0};
     ;
 
-    
-
     if (background.image) {
         var image;
         this.getImage = function () {
@@ -41,10 +39,11 @@ ms.BackgroundLayer = function (ctx, background, levelSize) {
     }
 
     function render() {
+        var cameraOffset = ms.screens.gameScreen.getCameraOffset();
         if (background.image) {
             ctx.save();
             ctx.scale(imageScale.x, imageScale.y);
-            ctx.drawImage(image, 0, 0);
+            ctx.drawImage(image, -cameraOffset.x / imageScale.x, -cameraOffset.y / imageScale.y);
             ctx.restore();
         } else {
             ctx.fillStyle = staticBackgroundColor;

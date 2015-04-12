@@ -68,22 +68,43 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
         }
     }
 
-    function displayAnim(dx, dy) {
-        var frame = currentAnim.playOrder[currentFrame];
-        var frameData = spriteData.frames[currentAnim.frames[frame]];
-        var frameOffsetX = frameData.spriteSourceSize.x;
-        var frameOffsetY = frameData.spriteSourceSize.y;
-        ctx.drawImage(
-            image
-            , frameData.frame.x
-            , frameData.frame.y
-            , frameData.frame.w
-            , frameData.frame.h
-            , dx + frameOffsetX
-            , dy + frameOffsetY
-            , frameData.frame.w
-            , frameData.frame.h
-        );
+    function displayAnim(positionX, positionY, flip) {
+        var cameraOffset = ms.screens.gameScreen.getCameraOffset()
+            , frame = currentAnim.playOrder[currentFrame]
+            , frameData = spriteData.frames[currentAnim.frames[frame]]
+            , frameOffsetX = frameData.spriteSourceSize.x
+            , frameOffsetY = frameData.spriteSourceSize.y
+        ;
+
+        if (flip) {
+            ctx.save();
+            ctx.scale(-1, 1);
+            //renderComp.displayAnim(-(position.x + frameSize.width), position.y);
+            ctx.drawImage(
+                image
+                , frameData.frame.x
+                , frameData.frame.y
+                , frameData.frame.w
+                , frameData.frame.h
+                , Math.floor(-(positionX - frameOffsetX + frameSize.width - cameraOffset.x))
+                , Math.floor(positionY + frameOffsetY - cameraOffset.y)
+                , frameData.frame.w
+                , frameData.frame.h
+            )
+            ctx.restore();
+        } else {
+            ctx.drawImage(
+                image
+                , frameData.frame.x
+                , frameData.frame.y
+                , frameData.frame.w
+                , frameData.frame.h
+                , Math.floor(positionX + frameOffsetX - cameraOffset.x)
+                , Math.floor(positionY + frameOffsetY - cameraOffset.y)
+                , frameData.frame.w
+                , frameData.frame.h
+            )
+        }
     }
 
     return {

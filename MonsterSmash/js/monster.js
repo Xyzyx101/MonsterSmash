@@ -1,5 +1,5 @@
 ﻿/* In game monster entity */
-ms.Monster = function (ctx, initialPosition) {
+ms.Monster = function (ctx, initialPosition, levelSize) {
     "use strict";
 
     var getHeld = ms.input.getHeld
@@ -111,27 +111,30 @@ ms.Monster = function (ctx, initialPosition) {
         FSM.update(dt);
         position.x += vel.x;
         position.y += vel.y;
+        checkLevelBounds();
         renderComp.animate(dt);
     }
     function render() {
-        if (flip) {
+        renderComp.displayAnim(position.x, position.y, flip);
+        /*if (flip) {
             ctx.save();
             ctx.scale(-1, 1);
             renderComp.displayAnim(-(position.x + frameSize.width), position.y);
             ctx.restore();
         } else {
-            renderComp.displayAnim(position.x, position.y);
-        }
+            renderComp.displayAnim(position.x, position.y, flip);
+        }*/
         
         debugDraw();
     }
 
     function debugDraw() {
+        var cameraOffset = ms.screens.gameScreen.getCameraOffset();
         ctx.save();
         ctx.strokeStyle = "rgb(255,255,0)";
-        ctx.strokeRect(position.x, position.y, frameSize.width, frameSize.height);
+        ctx.strokeRect(position.x - cameraOffset.x, position.y - cameraOffset.y, frameSize.width, frameSize.height);
         ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
-        ctx.fillRect(position.x + bbOffset.x, position.y + bbOffset.y, bbSize.width, bbSize.height);
+        ctx.fillRect(position.x + bbOffset.x - cameraOffset.x, position.y + bbOffset.y - cameraOffset.y, bbSize.width, bbSize.height);
         ctx.restore();
     }
 
@@ -148,6 +151,11 @@ ms.Monster = function (ctx, initialPosition) {
         }
     }
 
+    function checkLevelBounds() {
+        position.x = Math.max(position.x, -bbOffset.x);
+        position.x = Math.min(position.x, levelSize.width - frameSize.width + bbOffset.x)
+    }
+
     function getCollider() {
         return new ms.Collider(
             position.x + bbOffset.x
@@ -157,6 +165,7 @@ ms.Monster = function (ctx, initialPosition) {
             , this);
     }
 
+    //TODO what is this for?
     function getFrameSize() {
         return frameSize;
     }
@@ -170,5 +179,7 @@ ms.Monster = function (ctx, initialPosition) {
         , render: render
         , isLoaded: this.isLoaded
         , getCollider: getCollider
+        , getFrameSize: getFrameSize
+        , getPosition: getPosition
     };
 };

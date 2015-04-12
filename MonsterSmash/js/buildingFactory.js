@@ -16,7 +16,7 @@
         ;
 
         location.x = xPos;
-        location.y = ms.screens.gameScreen.baseSize.height - (size.height * tileSize.floorHeight);
+        location.y = ms.screens.gameScreen.getGroundLevel() - (size.height * tileSize.floorHeight);
         var image = new Image();
         var newBuilding = new Building(ctx, image, location, size, tileHP, tileSize);
         if (ms.imageManager.getImage(buildingImagePath)) {
@@ -45,7 +45,7 @@
             , tileDamage = []
             , tileColliders = []
             , damageOffset
-            , tileBB = { width: 50, height: 50 };
+            , tileBB = { width: 44, height: 44 };
 
         damageOffset = tileSize.rightEdgeWidth + tileSize.centerWidth + tileSize.leftEdgeWidth;
         for (var i = 0; i < size.width; ++i) {
@@ -58,6 +58,7 @@
         }
 
         function render() {
+            var cameraOffset = ms.screens.gameScreen.getCameraOffset();
             for (var col = 0; col < size.width; ++col) {
                 var tileWidth, tileHeight;
                 if (col === 0) {
@@ -90,8 +91,8 @@
                         , sourceY
                         , tileWidth
                         , tileHeight
-                        , destX
-                        , destY
+                        , destX - cameraOffset.x
+                        , destY - cameraOffset.y
                         , tileWidth
                         , tileHeight
                     );
@@ -105,13 +106,17 @@
 
         function addCollidersToQuadtree(quadtree) {
             for (var col = 0; col < size.width; ++col) {
-                var tileXOffset;
+                var tileXOffset
+                    , colliderWidth;
                 if (col === 0) {
                     tileXOffset = Math.floor((tileSize.leftEdgeWidth - tileBB.width) * 0.5);
+                    colliderWidth = Math.floor(tileBB.width * (tileSize.leftEdgeWidth / tileSize.centerWidth));
                 } else if (col === size.width - 1) {
                     tileXOffset = Math.floor((tileSize.rightEdgeWidth - tileBB.width) * 0.5);
+                    colliderWidth = Math.floor(tileBB.width * (tileSize.rightEdgeWidth / tileSize.centerWidth));       
                 } else {
                     tileXOffset = Math.floor((tileSize.centerWidth - tileBB.width) * 0.5);
+                    colliderWidth = tileBB.width;
                 }
                 var tileYOffset = Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
                 for (var row = 0; row < size.height; ++row) {
@@ -127,7 +132,7 @@
                         colliderX = location.x + tileSize.leftEdgeWidth + (col - 1) * tileSize.centerWidth + tileXOffset;
                     }
                     colliderY = location.y + row * tileSize.floorHeight + tileYOffset;
-                    var collider = new ms.Collider(colliderX, colliderY, tileBB.width, tileBB.height, parentObj);
+                    var collider = new ms.Collider(colliderX, colliderY, colliderWidth, tileBB.height, parentObj);
                     quadtree.insert(collider);
                 }
             }
