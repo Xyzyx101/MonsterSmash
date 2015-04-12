@@ -20,6 +20,7 @@
         , displayScore
         , groundLevel = baseSize.height - 32
         , gravity = 1
+        , monster
     ;
 
     function run() {
@@ -141,7 +142,7 @@
     }
 
     function startLevel(level) {
-        var monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
+        monster = registerEntity(new ms.Monster(ctx, level.playerSpawn));
     }
 
     function addResource(resource, path, image) {
@@ -205,7 +206,10 @@
             entities[i].render();
         }
         buildingQuadtree.debugDraw(ctx);
-        buildingQuadtree.debugRetrieve(ctx, new ms.Collider(275, 600, 50, 50, null));
+        
+        //buildingQuadtree.debugRetrieve(ctx, new ms.Collider(275, 600, 50, 50, null));
+        var hits = [];
+        buildingQuadtree.retrieve(monster.getCollider(), hits, ctx);
     }
 
     function killTick() {

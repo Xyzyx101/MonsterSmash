@@ -20,7 +20,7 @@
         {
             buildingStyle: 1
             , xPos: 300
-            , size: { width: 8, height: 7 }
+            , size: { width: 8, height: 6 }
         }
     ]
     , spawns:[]

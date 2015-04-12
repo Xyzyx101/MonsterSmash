@@ -104,6 +104,7 @@
         }
     };
 
+    /*
     ms.Quadtree.prototype.retrieve = function (collider, hits) {
         hits = hits || [];
         var index = this.getIndex(collider);
@@ -112,7 +113,7 @@
         }
         hits.concat(this.colliders);
         return hits;
-    };
+    };*/
 
 
     ms.Quadtree.prototype.debugDraw = function (ctx) {
@@ -136,31 +137,56 @@
         ctx.restore();
     };
 
-    ms.Quadtree.prototype.debugRetrieve = function (ctx, collider, hits) {
+    /* this will calculate debug info if you pass in a context */
+    ms.Quadtree.prototype.retrieve = function (collider, hits, ctx) {
         hits = hits || [];
-        ctx.save();
-        ctx.strokeStyle = "rgba(0, 255, 255, 0.7)";
-        //ctx.fillStyle = "rgba(0, 255, 255, 0.2)";
-        ctx.strokeRect(collider.x, collider.y, collider.width, collider.height);
-        ctx.restore();
+        if (ctx) {
+            ctx.save();
+            ctx.strokeStyle = "rgba(0, 255, 255, 0.85)";
+            ctx.strokeRect(collider.x, collider.y, collider.width, collider.height);
+            ctx.restore();
+        }
+       
         var index = this.getIndex(collider);
-        if (index != -1 && this.nodes[0] !== null) {
-            this.nodes[index].debugRetrieve(ctx, collider, hits);
+        if (this.nodes[0] !== null) {
+            if (index === -1) {
+                /* Need to check overlap with all quadrants
+                 * Could overlap with all 4 */
+                if (collider.x <= this.nodes[0].bounds.x) {
+                    if (collider.y <= this.nodes[2].bounds.y) {
+                        this.nodes[1].retrieve(collider, hits, ctx);
+                    }
+                    if (collider.y + collider.height >= this.nodes[2].bounds.y) {
+                        this.nodes[2].retrieve(collider, hits, ctx);
+                    }
+                }
+                if (collider.x + collider.width >= this.nodes[0].bounds.x) {
+                    if (collider.y <= this.nodes[3].bounds.y) {
+                        this.nodes[0].retrieve(collider, hits, ctx);
+                    }
+                    if (collider.y + collider.height >= this.nodes[3].bounds.y) {
+                        this.nodes[3].retrieve(collider, hits, ctx);
+                    }
+                }
+            } else {
+                this.nodes[index].retrieve(collider, hits, ctx);
+            }
         }
-        ctx.save();
-        ctx.strokeStyle = "rgba(255, 255, 0, 0.7)";
-        ctx.fillStyle = "rgba(255, 255, 0, 0.2)";
-        ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
-        for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {
-            ctx.fillRect(
-                this.colliders[colliderIndex].x
-                , this.colliders[colliderIndex].y
-                , this.colliders[colliderIndex].width
-                , this.colliders[colliderIndex].height
-            );
+        if (ctx) {
+            ctx.save();
+            ctx.strokeStyle = "rgba(255, 255, 0, 0.7)";
+            ctx.fillStyle = "rgba(255, 255, 0, 0.2)";
+            ctx.strokeRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+            for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {
+                ctx.fillRect(
+                    this.colliders[colliderIndex].x
+                    , this.colliders[colliderIndex].y
+                    , this.colliders[colliderIndex].width
+                    , this.colliders[colliderIndex].height
+                );
+            }
+            ctx.restore();
         }
-        ctx.restore();
-
         hits.concat(this.colliders);
         return hits;
     };

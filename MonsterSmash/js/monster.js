@@ -148,11 +148,19 @@ ms.Monster = function (ctx, initialPosition) {
         }
     }
 
+    function getCollider() {
+        return new ms.Collider(
+            position.x + bbOffset.x
+            , position.y + bbOffset.y
+            , bbSize.width
+            , bbSize.height
+            , this);
+    }
+
     function getFrameSize() {
         return frameSize;
     }
-
-
+    
     function getPosition() {
         return position;
     }
@@ -161,5 +169,6 @@ ms.Monster = function (ctx, initialPosition) {
         update: update
         , render: render
         , isLoaded: this.isLoaded
+        , getCollider: getCollider
     };
 };
