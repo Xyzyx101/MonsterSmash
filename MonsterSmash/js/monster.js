@@ -18,19 +18,31 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         , isStanding = false
         , vel = { x: 0, y: 0 }
         , walkSpeed = 5
-        , isTouchingBuilding = false;
+        , isTouchingBuilding = false
     ;
 
     var renderComp = ms.RenderComponent.call(this, ctx, "sprites/monsterSprite.png", ms.spriteData.monsterSprite, 40, frameSize);
-    var frames =
     renderComp.addAnim(new ms.Anim(
         "Idle"
         , ["MonsterAnim_Idle.0000.png"
             , "MonsterAnim_Idle.0001.png"
             , "MonsterAnim_Idle.0002.png"
             , "MonsterAnim_Idle.0003.png"
-            , "MonsterAnim_Idle.0004.png"]
-        , [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1]
+            , "MonsterAnim_Idle.0004.png"
+            , "MonsterAnim_Idle.0005.png"
+            , "MonsterAnim_Idle.0006.png"
+            , "MonsterAnim_Idle.0007.png"
+            , "MonsterAnim_Idle.0008.png"
+            , "MonsterAnim_Idle.0009.png"
+            , "MonsterAnim_Idle.0010.png"
+            , "MonsterAnim_Idle.0011.png"
+            , "MonsterAnim_Idle.0012.png"
+            , "MonsterAnim_Idle.0013.png"
+            , "MonsterAnim_Idle.0014.png"
+            , "MonsterAnim_Idle.0015.png"
+            , "MonsterAnim_Idle.0016.png"
+            , "MonsterAnim_Idle.0017.png"]
+        , [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
     ));
     renderComp.addAnim(new ms.Anim(
         "Walk"
@@ -60,7 +72,22 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , "MonsterAnim_Walk.0047.png"]
         , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
     ));
-
+    renderComp.addAnim(new ms.Anim(
+        "Eat"
+        , ["MonsterAnim_Eat.0057.png"
+            , "MonsterAnim_Eat.0058.png"
+            , "MonsterAnim_Idle.0059.png"
+            , "MonsterAnim_Idle.0060.png"
+            , "MonsterAnim_Idle.0061.png"
+            , "MonsterAnim_Idle.0062.png"
+            , "MonsterAnim_Idle.0063.png"
+            , "MonsterAnim_Idle.0064.png"
+            , "MonsterAnim_Idle.0065.png"
+            , "MonsterAnim_Idle.0066.png"
+            , "MonsterAnim_Idle.0067.png"
+            , "MonsterAnim_Idle.0068.png"]
+        , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    ));
 
     var FSM = ms.FSMComponent.call(this);
     FSM.addState("Idle",

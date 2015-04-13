@@ -14,7 +14,7 @@
     , resources: {
         audio: [""]
         , images: [""]
-        , sprites: ["monsterSprite"]
+        , sprites: ["monsterSprite", "PoliceCar"]
     }
     , buildings: [
         {
