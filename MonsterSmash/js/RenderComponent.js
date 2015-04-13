@@ -79,7 +79,6 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
         if (flip) {
             ctx.save();
             ctx.scale(-1, 1);
-            //renderComp.displayAnim(-(position.x + frameSize.width), position.y);
             ctx.drawImage(
                 image
                 , frameData.frame.x
@@ -90,7 +89,7 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
                 , Math.floor(positionY + frameOffsetY - cameraOffset.y)
                 , frameData.frame.w
                 , frameData.frame.h
-            )
+            );
             ctx.restore();
         } else {
             ctx.drawImage(
@@ -103,7 +102,7 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
                 , Math.floor(positionY + frameOffsetY - cameraOffset.y)
                 , frameData.frame.w
                 , frameData.frame.h
-            )
+            );
         }
     }
 

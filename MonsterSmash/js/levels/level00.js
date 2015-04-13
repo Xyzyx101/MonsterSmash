@@ -21,6 +21,14 @@
             buildingStyle: 1
             , xPos: 300
             , size: { width: 8, height: 6 }
+        }, {
+            buildingStyle: 1
+            , xPos: 900
+            , size: { width: 3, height: 9 }
+        }, {
+            buildingStyle: 1
+            , xPos: 1700
+            , size: { width: 5, height: 4 }
         }
     ]
     , spawns:[]

@@ -118,7 +118,11 @@
             }
         }
 
-        buildingQuadtree = new ms.Quadtree(0, { x: 0, y: 0, width: levelSize.width, height: levelSize.height });
+        var squareDimension = Math.max(levelSize.width, levelSize.height);
+        var quadTreeX = -Math.floor((squareDimension - levelSize.width) * 0.5);
+        var quadTreeY = -Math.floor((squareDimension - levelSize.height) * 0.5);
+        buildingQuadtree = new ms.Quadtree(0, { x: quadTreeX, y: quadTreeY, width: squareDimension, height: squareDimension });
+
 
         function isLoaded(element) {
             return element.isLoaded === true;
@@ -181,6 +185,8 @@
         var fixedUpdateTime = 20;
         var totalTime = dt + leftOverTime;
         while (totalTime > fixedUpdateTime) {
+            var hits = buildingQuadtree.retrieve(monster.getCollider());
+            monster.collideBuildings(hits);
             var totalEntities = entities.length;
             var i, len;
             for (i = 0, len = entities.length; i < len; ++i) {
@@ -189,7 +195,7 @@
             buildingQuadtree.clear();
             for (i = 0, len = buildings.length; i < len; ++i) {
                 buildings[i].addCollidersToQuadtree(buildingQuadtree);
-            }
+            }        
             totalTime -= fixedUpdateTime;
         }
         leftOverTime = totalTime;
@@ -209,8 +215,8 @@
         }
         buildingQuadtree.debugDraw(ctx);
         
-        //buildingQuadtree.debugRetrieve(ctx, new ms.Collider(275, 600, 50, 50, null));
         var hits = [];
+        //DELETEME -- debug only
         buildingQuadtree.retrieve(monster.getCollider(), hits, ctx);
     }
 

@@ -4,7 +4,7 @@ ms.BackgroundLayer = function (ctx, background, levelSize) {
     "use strict";
     var staticBackgroundColor = null
         , canvasSize = { width: ctx.canvas.width, height: ctx.canvas.height }
-        , imageScale = {x:0,y:0};
+        , imageScale = {x:0,y:0}
     ;
 
     if (background.image) {
@@ -21,7 +21,7 @@ ms.BackgroundLayer = function (ctx, background, levelSize) {
                 imageScale = {
                     x: levelSize.width / image.width
                     , y: levelSize.height / image.height
-                }
+                };
                 this.isLoaded = true;
             };
             image = new Image();

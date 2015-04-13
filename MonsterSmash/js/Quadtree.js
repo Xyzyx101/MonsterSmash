@@ -104,18 +104,6 @@
         }
     };
 
-    /*
-    ms.Quadtree.prototype.retrieve = function (collider, hits) {
-        hits = hits || [];
-        var index = this.getIndex(collider);
-        if (index != -1 && this.nodes[0] !== null) {
-            this.nodes[index].retrieve(collider, hits);
-        }
-        hits.concat(this.colliders);
-        return hits;
-    };*/
-
-
     ms.Quadtree.prototype.debugDraw = function (ctx) {
         if (this.nodes[0]) {
             for (var i = 0; i < 4; ++i) {
@@ -132,7 +120,7 @@
             , this.bounds.width
             , this.bounds.height
         );
-        for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {   
+        for (var colliderIndex = 0, len = this.colliders.length; colliderIndex < len; ++colliderIndex) {
             ctx.fillRect(
                 this.colliders[colliderIndex].x - cameraOffset.x
                 , this.colliders[colliderIndex].y - cameraOffset.y
@@ -145,7 +133,32 @@
 
     /* this will calculate debug info if you pass in a context */
     ms.Quadtree.prototype.retrieve = function (collider, hits, ctx) {
-        hits = hits || [];
+        var hits = hits || [];
+        var index = this.getIndex(collider);
+        if (this.nodes[0] !== null) {
+            if (index === -1) {
+                /* Need to check overlap with all quadrants
+                 * Could overlap with all 4 */
+                if (collider.x <= this.nodes[0].bounds.x) {
+                    if (collider.y <= this.nodes[2].bounds.y) {
+                        hits = hits.concat(this.nodes[1].retrieve(collider, hits, ctx));
+                    }
+                    if (collider.y + collider.height >= this.nodes[2].bounds.y) {
+                        hits = hits.concat(this.nodes[2].retrieve(collider, hits, ctx));
+                    }
+                }
+                if (collider.x + collider.width >= this.nodes[0].bounds.x) {
+                    if (collider.y <= this.nodes[3].bounds.y) {
+                        hits = hits.concat(this.nodes[0].retrieve(collider, hits, ctx));
+                    }
+                    if (collider.y + collider.height >= this.nodes[3].bounds.y) {
+                        hits = hits.concat(this.nodes[3].retrieve(collider, hits, ctx));
+                    }
+                }
+            } else {
+                hits = hits.concat(this.nodes[index].retrieve(collider, hits, ctx));
+            }
+        }
         if (ctx) {
             var cameraOffset = ms.screens.gameScreen.getCameraOffset();
             ctx.save();
@@ -156,37 +169,6 @@
                 , collider.width
                 , collider.height
             );
-            ctx.restore();
-        }
-       
-        var index = this.getIndex(collider);
-        if (this.nodes[0] !== null) {
-            if (index === -1) {
-                /* Need to check overlap with all quadrants
-                 * Could overlap with all 4 */
-                if (collider.x <= this.nodes[0].bounds.x) {
-                    if (collider.y <= this.nodes[2].bounds.y) {
-                        this.nodes[1].retrieve(collider, hits, ctx);
-                    }
-                    if (collider.y + collider.height >= this.nodes[2].bounds.y) {
-                        this.nodes[2].retrieve(collider, hits, ctx);
-                    }
-                }
-                if (collider.x + collider.width >= this.nodes[0].bounds.x) {
-                    if (collider.y <= this.nodes[3].bounds.y) {
-                        this.nodes[0].retrieve(collider, hits, ctx);
-                    }
-                    if (collider.y + collider.height >= this.nodes[3].bounds.y) {
-                        this.nodes[3].retrieve(collider, hits, ctx);
-                    }
-                }
-            } else {
-                this.nodes[index].retrieve(collider, hits, ctx);
-            }
-        }
-        if (ctx) {
-            var cameraOffset = ms.screens.gameScreen.getCameraOffset();
-            ctx.save();
             ctx.strokeStyle = "rgba(255, 255, 0, 0.7)";
             ctx.fillStyle = "rgba(255, 255, 0, 0.2)";
             ctx.strokeRect(
@@ -205,8 +187,7 @@
             }
             ctx.restore();
         }
-        hits.concat(this.colliders);
-        return hits;
+        return hits.concat(this.colliders);
     };
 
 

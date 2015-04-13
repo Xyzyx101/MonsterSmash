@@ -16,10 +16,11 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         }
         , flip = true
         , isStanding = false
-        ,  vel = {x: 0, y: 0}
+        , vel = { x: 0, y: 0 }
         , walkSpeed = 5
+        , isTouchingBuilding = false;
     ;
-    
+
     var renderComp = ms.RenderComponent.call(this, ctx, "sprites/monsterSprite.png", ms.spriteData.monsterSprite, 40, frameSize);
     var frames =
     renderComp.addAnim(new ms.Anim(
@@ -113,18 +114,10 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         position.y += vel.y;
         checkLevelBounds();
         renderComp.animate(dt);
+        console.log(isTouchingBuilding);
     }
     function render() {
         renderComp.displayAnim(position.x, position.y, flip);
-        /*if (flip) {
-            ctx.save();
-            ctx.scale(-1, 1);
-            renderComp.displayAnim(-(position.x + frameSize.width), position.y);
-            ctx.restore();
-        } else {
-            renderComp.displayAnim(position.x, position.y, flip);
-        }*/
-        
         debugDraw();
     }
 
@@ -153,7 +146,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
 
     function checkLevelBounds() {
         position.x = Math.max(position.x, -bbOffset.x);
-        position.x = Math.min(position.x, levelSize.width - frameSize.width + bbOffset.x)
+        position.x = Math.min(position.x, levelSize.width - frameSize.width + bbOffset.x);
     }
 
     function getCollider() {
@@ -165,11 +158,45 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , this);
     }
 
-    //TODO what is this for?
+    function collideBuildings(hits) {
+        isTouchingBuilding = false;
+        if (hits.length === 0) {
+            return;
+        }
+        var bbTop = position.y + bbOffset.y
+            , bbBot = position.y + frameSize.height
+            , bbLeft = position.x + bbOffset.x
+            , bbRight = position.x + bbOffset.x + bbSize.width
+            , hitIndex = 0
+            , hitsLen = hits.length
+        ;
+        while (hitIndex < hitsLen) {
+            var hit = hits[hitIndex];
+            if (hit.x > bbRight) {
+                ++hitIndex;
+                continue;
+            }
+            if (hit.x + hit.width < bbLeft) {
+                ++hitIndex;
+                continue;
+            }
+            if (hit.y > bbBot) {
+                ++hitIndex;
+                continue;
+            }
+            if (hit.y + hit.height < bbTop) {
+                ++hitIndex;
+                continue;
+            }
+            isTouchingBuilding = true;
+            break;
+        }
+    }
+
     function getFrameSize() {
         return frameSize;
     }
-    
+
     function getPosition() {
         return position;
     }
@@ -181,5 +208,6 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         , getCollider: getCollider
         , getFrameSize: getFrameSize
         , getPosition: getPosition
+        , collideBuildings:collideBuildings
     };
 };
