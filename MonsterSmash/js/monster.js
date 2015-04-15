@@ -229,7 +229,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , "MonsterAnim_Fall.0121.png"
             , "MonsterAnim_Fall.0122.png"
             , "MonsterAnim_Fall.0123.png"]
-        , [0,0,1,1,2,2,3,3,3,2,2,1,1,0]
+        , [0, 0, 1, 1, 2, 2, 3, 3, 3, 2, 2, 1, 1, 0]
     ));
     renderComp.addAnim(new ms.Anim(
      "Jump"
@@ -319,6 +319,15 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         , "MonsterAnim_WallWalk.0191.png"]
      , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     ));
+    renderComp.addAnim(new ms.Anim(
+    "VertIdle"
+    , ["MonsterAnimVert_Idle.0132.png"
+        , "MonsterAnimVert_Idle.0133.png"
+        , "MonsterAnimVert_Idle.0134.png"
+        , "MonsterAnimVert_Idle.0135.png"
+        , "MonsterAnimVert_Idle.0136.png"]
+     , [0, 1, 2, 3, 4, 4, 3, 2, 1, 0]
+    ));
 
     var FSM = ms.FSMComponent.call(this);
     FSM.addState("Idle",
@@ -330,7 +339,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , state: function (dt) {
                 if (getHeld(ACTION.UP) && isTouchingBuilding) {
                     position.y -= 10;
-                    FSM.changeState("VertClimb");
+                    FSM.changeState("VertIdle");
                 }
                 if (getPressed(ACTION.JUMP)) {
                     FSM.changeState("Jump");
@@ -363,7 +372,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 }
                 if (getHeld(ACTION.UP) && isTouchingBuilding) {
                     position.y -= 10;
-                    FSM.changeState("VertClimb");
+                    FSM.changeState("VertIdle");
                 }
                 if (getHeld(ACTION.RIGHT)) {
                     vel.x = walkSpeed;
@@ -418,11 +427,11 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
 
             }
         });
-    FSM.addState("VertClimb",
+    FSM.addState("VertIdle",
         {
             before: function () {
                 isStanding = false;
-                renderComp.changeAnim("VertClimb");
+                renderComp.changeAnim("VertIdle");
             }
             , state: function (dt) {
                 if (isStanding) {
