@@ -702,7 +702,9 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             }
             // Hit
             if (hit.parentObj.type === "building") {
-                buildingHit = hit.parentObj;
+                if (!hit.parentObj.obj.isTileDestroyed(hit.parentObj.tile.row, hit.parentObj.tile.col)) {
+                    buildingHit = hit.parentObj;
+                }  
                 continue;
             }
             if (hit.parentObj.type === "policeCar") {

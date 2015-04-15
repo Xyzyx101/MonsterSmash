@@ -3,10 +3,11 @@
 
     var renderStyle = {
         NEW: 0
-        , DAMAGE: 1
-        , HEAVYDAMAGE: 2
-        , DESTROYED: 3
+            , DAMAGE: 1
+            , HEAVYDAMAGE: 2
+            , DESTROYED: 3
     };
+        
 
     function createBuilding(ctx, buildingStyle, xPos, size) {
         var buildingImagePath = ms.buildingStyles[buildingStyle].image
@@ -45,8 +46,13 @@
             , tileDamage = []
             , tileColliders = []
             , damageOffset
-            , tileBB = { width: 44, height: 44 };
+            , tileBB = { width: 44, height: 44 }
+            , maxDamage
+            , buildingDamage = 0
+            , destroyed
+        ;
 
+        maxDamage = size.width * size.height * 3; // three is for the three damaged states
         damageOffset = tileSize.rightEdgeWidth + tileSize.centerWidth + tileSize.leftEdgeWidth;
         for (var i = 0; i < size.width; ++i) {
             tileHP[i] = [];
@@ -102,6 +108,32 @@
 
         function damage(tile) {
             console.log("Tile: x:" + tile.col + " y:" + tile.row + " damaged");
+            var thisTileDamage = tileDamage[tile.col][tile.row];
+            if (thisTileDamage === renderStyle.DESTROYED) {
+                return;
+            } else if (thisTileDamage === renderStyle.HEAVYDAMAGE) {
+                tileDamage[tile.col][tile.row] = renderStyle.DESTROYED;
+                ++buildingDamage;
+                checkDestroyed();
+            } else if (thisTileDamage === renderStyle.DAMAGE) {
+                tileDamage[tile.col][tile.row] = renderStyle.HEAVYDAMAGE;
+                ++buildingDamage;
+                checkDestroyed();
+            } else if (thisTileDamage === renderStyle.NEW) {
+                tileDamage[tile.col][tile.row] = renderStyle.DAMAGE;
+                ++buildingDamage;
+                checkDestroyed();
+            }
+        }
+
+        function checkDestroyed() {
+            if (buildingDamage / maxDamage > 0.4) {
+                destroyBuilding();
+            }
+        }
+
+        function destroyBuilding() {
+            console.log("Building: BOOM");
         }
 
         function addCollidersToQuadtree(quadtree) {
@@ -138,10 +170,15 @@
             }
         }
 
+        function isTileDestroyed(row, col) {
+            return tileDamage[col][row] === renderStyle.DESTROYED;
+        }
+
         return {
             render: render
             , damage: damage
             , addCollidersToQuadtree: addCollidersToQuadtree
+            , isTileDestroyed: isTileDestroyed
         };
     }
 
