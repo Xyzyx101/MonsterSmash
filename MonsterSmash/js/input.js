@@ -38,8 +38,8 @@
         bindKey(KEY.A, ACTION.LEFT);
         bindKey(KEY.S, ACTION.DOWN);
         bindKey(KEY.D, ACTION.RIGHT);
-        bindKey(KEY.CTRL, ACTION.ATTACK);
-        bindKey(KEY.ALT, ACTION.JUMP);
+        bindKey(KEY.PERIOD, ACTION.ATTACK);
+        bindKey(KEY.COMMA, ACTION.JUMP);
         bindKey(KEY.UP_ARROW, ACTION.UP);
         bindKey(KEY.LEFT_ARROW, ACTION.LEFT);
         bindKey(KEY.DOWN_ARROW, ACTION.DOWN);
