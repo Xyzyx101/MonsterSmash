@@ -229,7 +229,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , "MonsterAnim_Fall.0121.png"
             , "MonsterAnim_Fall.0122.png"
             , "MonsterAnim_Fall.0123.png"]
-        , [0, 1, 2, 3, 2, 1]
+        , [0,0,1,1,2,2,3,3,3,2,2,1,1,0]
     ));
     renderComp.addAnim(new ms.Anim(
      "Jump"
@@ -387,6 +387,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                     FSM.changeState("Fall");
                 });
                 isStanding = false;
+                vel.y = 0;
             }
             , state: function (dt) {
                 jumpTimer -= dt;
@@ -394,7 +395,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                     if (flip) {
                         vel = { x: -8, y: -15 };
                     } else {
-                        vel = { x: 8, y: -1 };
+                        vel = { x: 8, y: -15 };
                     }
                 }
             }
@@ -445,7 +446,8 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         checkLevelBounds();
         renderComp.animate(dt);
         FSM.debug("Monster");
-        console.log(flip);
+        //console.log(flip);
+        console.log(vel.y);
     }
     function render() {
         renderComp.displayAnim(position.x, position.y, flip);

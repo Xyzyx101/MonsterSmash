@@ -191,6 +191,7 @@
     function update(dt) {
         var fixedUpdateTime = 20;
         var totalTime = dt + leftOverTime;
+        ms.Spawner.update(dt);
         while (totalTime > fixedUpdateTime) {
             var hits = buildingQuadtree.retrieve(monster.getCollider());
             monster.collideBuildings(hits);
@@ -208,7 +209,6 @@
         leftOverTime = totalTime;
         updateUI();
         camera.update();
-        ms.Spawner.update(dt);
     }
 
     function render() {
