@@ -3,11 +3,10 @@
 
     var renderStyle = {
         NEW: 0
-            , DAMAGE: 1
-            , HEAVYDAMAGE: 2
-            , DESTROYED: 3
+        , DAMAGE: 1
+        , HEAVYDAMAGE: 2
+        , DESTROYED: 3
     };
-        
 
     function createBuilding(ctx, buildingStyle, xPos, size) {
         var buildingImagePath = ms.buildingStyles[buildingStyle].image
@@ -49,17 +48,65 @@
             , tileBB = { width: 44, height: 44 }
             , maxDamage
             , buildingDamage = 0
-            , destroyed
+            , destroyed = false
+            , tilePosition = []
+            , tileRotation = []
+            , tileInitialPosition = []
+            , tileFinalRotation = []
+            , tileFinalPosition = []
+            , collapseTime
+            , collapseTimer
         ;
 
+        collapseTime = 200 * size.height;
         maxDamage = size.width * size.height * 3; // three is for the three damaged states
+
         damageOffset = tileSize.rightEdgeWidth + tileSize.centerWidth + tileSize.leftEdgeWidth;
-        for (var i = 0; i < size.width; ++i) {
-            tileHP[i] = [];
-            tileDamage[i] = [];
-            for (var j = 0; j < size.height; ++j) {
-                tileHP[i][j] = newTileHP;
-                tileDamage[i][j] = renderStyle.NEW;
+        for (var col = 0; col < size.width; ++col) {
+            var posX
+                , posY;
+            tileHP[col] = [];
+            tileDamage[col] = [];
+            tilePosition[col] = [];
+            tileRotation[col] = [];
+            tileInitialPosition[col] = [];
+            tileRotation[col] = [];
+            if (col === 0) {
+                posX = location.x;
+            } else {
+                posX = location.x + tileSize.leftEdgeWidth + ((col - 1) * tileSize.centerWidth);
+            }
+            for (var row = 0; row < size.height; ++row) {
+                tileHP[col][row] = newTileHP;
+                tileDamage[col][row] = renderStyle.NEW;
+                posY = location.y + (row * tileSize.floorHeight);
+                tilePosition[col][row] = { x: posX, y: posY };
+                tileInitialPosition[col][row] = { x: posX, y: posY };
+                tileRotation[col][row] = 0;
+            }
+        }
+
+        /* Update is special on a building.  When they are in the level they are static and update is not called. 
+         * When the building is destroyed it is removed from the building array and added to entities so it can animate */
+        function update(dt) {
+            if (this.kill) {
+                return;
+            }
+            if (collapseTimer < 0) {
+                this.kill = true;
+                ms.screens.gameScreen.markEntitiesDirty();
+                return;
+            }
+            collapseTimer -= dt;
+            var collapseRatio = 1 - (collapseTimer / collapseTime);
+            for (var col = 0; col < size.width; ++col) {
+                for (var row = 0; row < size.height; ++row) {
+                    var posX, posY, rot;
+                    posX = tileInitialPosition[col][row].x + (tileFinalPosition[col][row].x - tileInitialPosition[col][row].x) * collapseRatio;
+                    posY = tileInitialPosition[col][row].y + (tileFinalPosition[col][row].y - tileInitialPosition[col][row].y) * collapseRatio;
+                    tilePosition[col][row] = { x: posX, y: posY };
+                    tileRotation[col][row] = tileFinalRotation[col][row] * collapseRatio;
+                }
             }
         }
 
@@ -76,7 +123,7 @@
                 }
                 tileHeight = tileSize.floorHeight;
                 for (var row = 0; row < size.height; ++row) {
-                    var sourceX, sourceY, destX, destY;
+                    var sourceX, sourceY;
                     if (col === 0) {
                         sourceX = tileDamage[col][row] * damageOffset;
                     } else if (col === size.width - 1) {
@@ -84,30 +131,47 @@
                     } else {
                         sourceX = tileSize.leftEdgeWidth + (tileDamage[col][row] * damageOffset);
                     }
-                    sourceY = row === 0 ? 0 : tileSize.floorHeight; // first row gets the top image 
-                    if (col === 0) {
-                        destX = location.x;
+                    sourceY = row === 0 ? 0 : tileSize.floorHeight; // first row gets the top image
+
+                    var rot = tileRotation[col][row];
+                    if (rot === 0) {
+                        ctx.drawImage(
+                            image
+                            , sourceX
+                            , sourceY
+                            , tileWidth
+                            , tileHeight
+                            , tilePosition[col][row].x - cameraOffset.x
+                            , tilePosition[col][row].y - cameraOffset.y
+                            , tileWidth
+                            , tileHeight
+                        );
+
                     } else {
-                        destX = location.x + tileSize.leftEdgeWidth + ((col - 1) * tileSize.centerWidth);
+                        ctx.save();
+                        ctx.translate(tilePosition[col][row].x - cameraOffset.x, tilePosition[col][row].y - cameraOffset.y);
+                        ctx.rotate(rot);
+                        ctx.drawImage(
+                            image
+                            , sourceX
+                            , sourceY
+                            , tileWidth
+                            , tileHeight
+                            , 0
+                            , 0
+                            , tileWidth
+                            , tileHeight
+                        );
+                        ctx.restore();
                     }
-                    destY = location.y + (row * tileSize.floorHeight);
-                    ctx.drawImage(
-                        image
-                        , sourceX
-                        , sourceY
-                        , tileWidth
-                        , tileHeight
-                        , destX - cameraOffset.x
-                        , destY - cameraOffset.y
-                        , tileWidth
-                        , tileHeight
-                    );
                 }
             }
         }
 
         function damage(tile) {
-            console.log("Tile: x:" + tile.col + " y:" + tile.row + " damaged");
+            if (destroyed) {
+                return;
+            }
             var thisTileDamage = tileDamage[tile.col][tile.row];
             if (thisTileDamage === renderStyle.DESTROYED) {
                 return;
@@ -129,11 +193,26 @@
         function checkDestroyed() {
             if (buildingDamage / maxDamage > 0.4) {
                 destroyBuilding();
+                destroyed = true;
+                ms.screens.gameScreen.markBuildingsDirty();
             }
         }
 
         function destroyBuilding() {
-            console.log("Building: BOOM");
+            tileFinalPosition = [];
+            tileFinalRotation = [];
+            for (var col = 0; col < size.width; ++col) {
+                tileFinalPosition[col] = [];
+                tileFinalRotation[col] = [];
+                for (var row = 0; row < size.height; ++row) {
+                    var finalX, finalY, finalRot;
+                    finalX = tilePosition[col][row].x + Math.random() * tileSize.centerWidth * 2 - tileSize.centerWidth;
+                    finalY = ms.screens.gameScreen.getGroundLevel() - tileSize.floorHeight * (Math.random() * 0.5 + 0.5);
+                    tileFinalPosition[col][row] = { x: finalX, y: finalY };
+                    tileFinalRotation[col][row] = Math.random() * 2 - 1;
+                }
+            }
+            collapseTimer = collapseTime;
         }
 
         function addCollidersToQuadtree(quadtree) {
@@ -145,7 +224,7 @@
                     colliderWidth = Math.floor(tileBB.width * (tileSize.leftEdgeWidth / tileSize.centerWidth));
                 } else if (col === size.width - 1) {
                     tileXOffset = Math.floor((tileSize.rightEdgeWidth - tileBB.width) * 0.5);
-                    colliderWidth = Math.floor(tileBB.width * (tileSize.rightEdgeWidth / tileSize.centerWidth));       
+                    colliderWidth = Math.floor(tileBB.width * (tileSize.rightEdgeWidth / tileSize.centerWidth));
                 } else {
                     tileXOffset = Math.floor((tileSize.centerWidth - tileBB.width) * 0.5);
                     colliderWidth = tileBB.width;
@@ -174,16 +253,22 @@
             return tileDamage[col][row] === renderStyle.DESTROYED;
         }
 
+        // is whole building destroyed
+        function isDestroyed() {
+            return destroyed;
+        }
+
         return {
-            render: render
+            update: update
+            , render: render
             , damage: damage
             , addCollidersToQuadtree: addCollidersToQuadtree
             , isTileDestroyed: isTileDestroyed
+            , isDestroyed: isDestroyed
         };
     }
 
     return {
         createBuilding: createBuilding
-
     };
 })();

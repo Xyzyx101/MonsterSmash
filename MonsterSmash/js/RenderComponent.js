@@ -75,6 +75,9 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
     }
 
     function displayAnim(positionX, positionY, flip) {
+        if (!currentAnim) {
+            return;
+        }
         var cameraOffset = ms.screens.gameScreen.getCameraOffset()
             , frame = currentAnim.playOrder[currentFrame]
             , frameData = spriteData.frames[currentAnim.frames[frame]]

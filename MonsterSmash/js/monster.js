@@ -409,7 +409,6 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             before: function () {
                 jumpTimer = jumpTime;
                 renderComp.changeAnim("Jump", function () {
-                    console.log("jump Anim Done");
                     FSM.changeState("Fall");
                 });
                 isStanding = false;

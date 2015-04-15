@@ -91,6 +91,7 @@
         var level = ms.gameManager.nextLevel();
         killTick();
         entities = [];
+        entities.dirty = false;
         resources = [];
         buildings = [];
         levelSize = level.levelSize;
@@ -206,7 +207,9 @@
             }
             entityQuadtree.clear();
             for (i = 0, len = entities.length; i < len; ++i) {
-                entityQuadtree.insert(entities[i].getCollider());
+                if (entities[i].getCollider) {
+                    entityQuadtree.insert(entities[i].getCollider());
+                }
             }
             var hits = buildingQuadtree.retrieve(monster.getCollider());
             monster.collideBuildings(hits);
@@ -223,6 +226,9 @@
         leftOverTime = totalTime;
         updateUI();
         camera.update();
+        if (entities.dirty) {
+            killEntities();
+        }
     }
 
     function render() {
@@ -249,6 +255,35 @@
             window.cancelAnimationFrame(frameRequestId);
             frameRequestId = null;
         }
+    }
+
+    function markEntitiesDirty() {
+        entities.dirty = true;
+    }
+
+    /* Kill entities will check each entity for a kill boolean and remove them at the end of the frame when the dirty flag is set */
+    function killEntities() {
+        var newEntities = [];
+        for (var entityIndex = 0, entitiesLen = entities.length; entityIndex < entitiesLen; ++entityIndex) {
+            var entity = entities[entityIndex];
+            if (!entity.kill) {
+                newEntities.push(entity);
+            }
+        }
+        entities = newEntities;
+    }
+
+    function markBuildingsDirty() {
+        var newBuildings = [];
+        for (var buildingIndex = 0, buildingLen = buildings.length; buildingIndex < buildingLen; ++buildingIndex) {
+            var building = buildings[buildingIndex];
+            if (building.isDestroyed()) {
+                entities.push(building); // added to entities to animate destruction
+            } else {
+                newBuildings.push(building);
+            }
+        }
+        buildings = newBuildings;
     }
 
     function displayLoadOverlay() {
@@ -375,5 +410,7 @@
         , getCameraOffset: getCameraOffset
         , getRenderContext: getRenderContext
         , getMonster: getMonster
+        , markBuildingsDirty: markBuildingsDirty
+        , markEntitiesDirty: markEntitiesDirty
     };
 })();
