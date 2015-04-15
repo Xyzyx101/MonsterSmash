@@ -100,8 +100,8 @@
             }
         }
 
-        function damage() {
-
+        function damage(tile) {
+            console.log("Tile: x:" + tile.col + " y:" + tile.row + " damaged");
         }
 
         function addCollidersToQuadtree(quadtree) {
@@ -122,7 +122,7 @@
                 for (var row = 0; row < size.height; ++row) {
                     var parentObj = {
                         type: "building"
-                        , building: this
+                        , obj: this
                         , tile: { row: row, col: col }
                     };
                     var colliderX, colliderY;

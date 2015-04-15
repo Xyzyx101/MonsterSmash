@@ -1668,4 +1668,4 @@ ms.spriteData.monsterSprite =
         "scale": "1",
         "smartupdate": "$TexturePacker:SmartUpdate:44d11f625269e449ed066a71d9e4e5ac:8a3c2cfd9ff754c12c7100cdeb540ca3:6ec6ef82eac74a14701d8066d2bc065f$"
     }
-}
+};

@@ -224,9 +224,25 @@
         renderComp.displayAnim(position.x, position.y, flip);
     }
 
+    function getCollider() {
+        return new ms.Collider(
+           position.x + bbOffset.x
+           , position.y + bbOffset.y
+           , bbSize.width
+           , bbSize.height
+           , { type: "policeCar", obj: this });
+    }
+
+    function destroy() {
+        // TODO
+        console.log("TODO Police car destroy");
+    }
+
     return {
         update: update
         , render: render
         , isLoaded: this.isLoaded
+        , getCollider: getCollider
+        , destroy: destroy
     };
 };

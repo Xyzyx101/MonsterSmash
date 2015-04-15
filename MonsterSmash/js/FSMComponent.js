@@ -13,13 +13,14 @@ ms.FSMComponent = function () {
     var states = {}
         , currentState
         , newState
+    ;
 
     function addState(name, newState) {
         states[name] = newState;
     }
 
-    function changeState(changeState) {
-        newState = changeState;
+    function changeState(changeStateTo) {
+        newState = changeStateTo;
     }
 
     function update(dt) {

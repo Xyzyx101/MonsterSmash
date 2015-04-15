@@ -17,6 +17,7 @@
         , sprites: ["monsterSprite", "PoliceCarSprite"]
     }
     , buildings: [
+        /*
         {
             buildingStyle: 1
             , xPos: 300
@@ -29,6 +30,11 @@
             buildingStyle: 1
             , xPos: 1700
             , size: { width: 5, height: 4 }
+        }*/
+        {
+            buildingStyle: 1
+            , xPos: 300
+            , size: { width: 3, height: 2 }
         }
     ]
     , spawners:[

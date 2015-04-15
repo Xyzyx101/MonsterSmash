@@ -15,6 +15,7 @@
         , bgCanvas
         , bgCtx
         , buildingQuadtree
+        , entityQuadtree
         , scoreElement
         , powerMeterElement
         , displayScore
@@ -129,6 +130,7 @@
         var quadTreeX = -Math.floor((squareDimension - levelSize.width) * 0.5);
         var quadTreeY = -Math.floor((squareDimension - levelSize.height) * 0.5);
         buildingQuadtree = new ms.Quadtree(0, { x: quadTreeX, y: quadTreeY, width: squareDimension, height: squareDimension });
+        entityQuadtree = new ms.Quadtree(0, { x: quadTreeX, y: quadTreeY, width: squareDimension, height: squareDimension });
 
 
         function isLoaded(element) {
@@ -193,8 +195,6 @@
         var totalTime = dt + leftOverTime;
         ms.Spawner.update(dt);
         while (totalTime > fixedUpdateTime) {
-            var hits = buildingQuadtree.retrieve(monster.getCollider());
-            monster.collideBuildings(hits);
             var totalEntities = entities.length;
             var i, len;
             for (i = 0, len = entities.length; i < len; ++i) {
@@ -203,7 +203,21 @@
             buildingQuadtree.clear();
             for (i = 0, len = buildings.length; i < len; ++i) {
                 buildings[i].addCollidersToQuadtree(buildingQuadtree);
-            }        
+            }
+            entityQuadtree.clear();
+            for (i = 0, len = entities.length; i < len; ++i) {
+                entityQuadtree.insert(entities[i].getCollider());
+            }
+            var hits = buildingQuadtree.retrieve(monster.getCollider());
+            monster.collideBuildings(hits);
+            hits = entityQuadtree.retrieve(monster.getCollider());
+            monster.collideEntities(hits);
+            if (monster.isAttacking()) {
+                hits = entityQuadtree.retrieve(monster.getAttackCollider());
+                hits = hits.concat(buildingQuadtree.retrieve(monster.getAttackCollider(), null));
+                monster.attackEntities(hits);
+            }
+
             totalTime -= fixedUpdateTime;
         }
         leftOverTime = totalTime;
@@ -221,11 +235,13 @@
         for (i = 0, len = entities.length; i < len; ++i) {
             entities[i].render();
         }
-        buildingQuadtree.debugDraw(ctx);
-        
-        var hits = [];
+      
         //DELETEME -- debug only
-        buildingQuadtree.retrieve(monster.getCollider(), hits, ctx);
+        //buildingQuadtree.debugDraw(ctx);
+        //buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
+        entityQuadtree.debugDraw(ctx);
+        //entityQuadtree.retrieve(monster.getCollider(), null, ctx);
+        entityQuadtree.retrieve(monster.getAttackCollider(), null, ctx);
     }
 
     function killTick() {
