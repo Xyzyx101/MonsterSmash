@@ -1,19 +1,22 @@
 ﻿ms.PoliceCar = function (ctx, initialPosition) {
     "use strict";
 
-    var frameSize = { width: 160, height: 140 }
-        , position = initialPosition
-        , bbSize = { width: 74, height: 90 }  // Bounding box is centered in x and at the bottom in y
+    var frameSize = { width: 220, height: 48 }
+        , position
+        , bbSize = { width: 70, height: 25 }  // Bounding box is centered in x and at the bottom in y
         , bbOffset = {
             x: Math.floor((frameSize.width - bbSize.width) * 0.5)
             , y: frameSize.height - bbSize.height
         }
         , flip = true
         , vel = { x: 0, y: 0 }
-        , driveSpeed = 20
+        , driveSpeed = 10
+        , monster
     ;
+    position = { x: initialPosition.x, y: ms.screens.gameScreen.getGroundLevel() - frameSize.height };
+    monster = ms.screens.gameScreen.getMonster();
 
-    var renderComp = ms.RenderComponent.call(this, ctx, "sprites/PoliceCarSprite.png", ms.spriteData.PoliceCar, 40, frameSize);
+    var renderComp = ms.RenderComponent.call(this, ctx, "sprites/PoliceCarSprite.png", ms.spriteData.policeCarSprite, 40, frameSize);
     renderComp.addAnim(new ms.Anim(
         "Idle"
         , ["PoliceCarIdle.0000.png"
@@ -215,7 +218,6 @@
         FSM.update(dt);
         position.x += vel.x;
         position.y += vel.y;
-        checkLevelBounds();
         renderComp.animate(dt);
     }
     function render() {

@@ -7,7 +7,9 @@
  */
 ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize) {
     "use strict";
-    var image;
+    var image
+        , callback
+    ;
 
     if (ms.imageManager.getImage(src)) {
         image = ms.imageManager.getImage(src);
@@ -43,12 +45,16 @@ ms.RenderComponent = function (ctx, src, spriteData, newFrameDelay, newFrameSize
             animFrameChangeCount -= frameDelay;
             currentFrame++;
             if (currentFrame >= currentAnim.playOrder.length) {
+                if (callback) {
+                    callback();
+                }
                 currentFrame = 0;
             }
         }
     }
 
-    function changeAnim(newAnim) {
+    function changeAnim(newAnim, newCallback) {
+        callback = newCallback;
         currentFrame = 0;
         animFrameChangeCount = 0;
         var index = 0;

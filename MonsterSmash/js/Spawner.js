@@ -1,7 +1,6 @@
 ﻿/* The Spawner module keeps track of al the nemies that should be spawned in a level */
 ms.Spawner = (function () {
     var spawns = []
-        , ctx
         , registerEntity
     ;
 
@@ -20,20 +19,22 @@ ms.Spawner = (function () {
         }
     }
 
-    function initSpawner(newCtx, registerEntityFunc) {
+    function init(newCtx, registerEntityFunc) {
         spawns = [];
         ctx = newCtx;
         registerEntity = registerEntityFunc;
     }
 
     function spawnNewEntity(type, position) {
+        var ctx = ms.screens.gameScreen.getRenderContext();
         if (type === "PoliceCar") {
-            registerEntity(new ms.PoliceCar(position));
+            registerEntity(new ms.PoliceCar(ctx, position));
         }
     }
 
     return {
         addSpawn: addSpawn
+        , init: init
         , update: update
     };
 

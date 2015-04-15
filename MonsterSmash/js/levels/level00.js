@@ -14,7 +14,7 @@
     , resources: {
         audio: [""]
         , images: [""]
-        , sprites: ["monsterSprite", "PoliceCar"]
+        , sprites: ["monsterSprite", "PoliceCarSprite"]
     }
     , buildings: [
         {
@@ -31,5 +31,11 @@
             , size: { width: 5, height: 4 }
         }
     ]
-    , spawns:[]
+    , spawners:[
+        {
+            type: "PoliceCar"
+            , position: { x: 400 }
+            , rate: 30000
+        }
+    ]
 };

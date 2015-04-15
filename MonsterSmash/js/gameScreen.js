@@ -22,6 +22,7 @@
         , gravity = 1
         , monster
         , camera
+        , spawner
     ;
 
     function run() {
@@ -118,6 +119,12 @@
             }
         }
 
+        ms.Spawner.init(ctx, registerEntity);
+        for (var spawnerIndex = 0, spawnerLen = level.spawners.length; spawnerIndex < spawnerLen; ++spawnerIndex) {
+            var spawn = level.spawners[spawnerIndex];
+            ms.Spawner.addSpawn(spawn.type, spawn.position, spawn.rate);
+        }
+
         var squareDimension = Math.max(levelSize.width, levelSize.height);
         var quadTreeX = -Math.floor((squareDimension - levelSize.width) * 0.5);
         var quadTreeY = -Math.floor((squareDimension - levelSize.height) * 0.5);
@@ -201,6 +208,7 @@
         leftOverTime = totalTime;
         updateUI();
         camera.update();
+        ms.Spawner.update(dt);
     }
 
     function render() {
@@ -333,6 +341,14 @@
         return camera.getOffset();
     }
 
+    function getRenderContext() {
+        return ctx;
+    }
+
+    function getMonster() {
+        return monster;
+    }
+
     return {
         run: run
         , loadLevel: loadLevel
@@ -341,5 +357,7 @@
         , getGroundLevel: getGroundLevel
         , getGravity: getGravity
         , getCameraOffset: getCameraOffset
+        , getRenderContext: getRenderContext
+        , getMonster: getMonster
     };
 })();

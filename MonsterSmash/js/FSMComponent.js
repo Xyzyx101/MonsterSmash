@@ -36,9 +36,14 @@ ms.FSMComponent = function () {
         states[currentState].state(dt);
     }
 
+    function debug(debugString) {
+        console.log(debugString + ":" + currentState);
+    }
+
     return {
         addState: addState
         , changeState: changeState
         , update: update
+        , debug: debug
     };
 };
