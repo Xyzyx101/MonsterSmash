@@ -265,6 +265,7 @@
             var parentObj = {
                 type: "leftEdge"
                 , obj: this
+                , wallPosition: location.x
             };
             var collider = new ms.Collider(colliderX, colliderY, edgeColliderWidth, tileBB.height, parentObj);
             quadtree.insert(collider);
@@ -276,6 +277,7 @@
             var parentObj = {
                 type: "rightEdge"
                 , obj: this
+                , wallPosition: colliderX
             };
             var collider = new ms.Collider(colliderX, colliderY, edgeColliderWidth, tileBB.height, parentObj);
             quadtree.insert(collider);
@@ -286,6 +288,7 @@
             var parentObj = {
                 type: "roof"
                 , obj: this
+                , roofPosition : location.y
             };
             var collider = new ms.Collider(colliderX, colliderY, colliderWidth, edgeColliderWidth, parentObj);
             quadtree.insert(collider);
