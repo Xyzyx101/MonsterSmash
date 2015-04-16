@@ -713,6 +713,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             }
         }
         if (buildingHit) {
+            ms.sound.play("punch");
             buildingHit.obj.damage(buildingHit.tile);
         }
     }

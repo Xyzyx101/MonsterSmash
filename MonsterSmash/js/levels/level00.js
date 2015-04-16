@@ -12,7 +12,7 @@
         , color: { r: 0, g: 0, b: 0 }
     }
     , resources: {
-        audio: [""]
+        audio: ["collapse", "eat", "gun", "machineGun", "powerUp", "roar01", "punch"]
         , images: [""]
         , sprites: ["monsterSprite", "PoliceCarSprite"]
     }

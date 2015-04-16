@@ -194,3 +194,7 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+
+# raw sound files are too bg to add to the repo.  final versions are added under monsterSmash/sounds
+Sounds/

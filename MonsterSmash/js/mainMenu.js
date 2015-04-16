@@ -12,6 +12,7 @@
             });
         }
         initialized = true;
+        ms.sound.playMusic("RunAmok");
     }
 
     function menuAction(action) {

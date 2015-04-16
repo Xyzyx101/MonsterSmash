@@ -3,7 +3,6 @@
     var initialized
         , backgroundLayer = null
         , resources = []
-        , currentLevel = null
         , baseSize = { width: 1024, height: 768 } // this is an arbitrary value for the art
         , levelSize = { width: 0, height: 0 }
         , gameScale = 0
@@ -133,6 +132,10 @@
         buildingQuadtree = new ms.Quadtree(0, { x: quadTreeX, y: quadTreeY, width: squareDimension, height: squareDimension });
         entityQuadtree = new ms.Quadtree(0, { x: quadTreeX, y: quadTreeY, width: squareDimension, height: squareDimension });
 
+        for (var soundIndex = 0, soundLen = level.resources.audio.length; soundIndex < soundLen; ++soundIndex) {
+            var sound = level.resources.audio[soundIndex];
+            resources.push(ms.sound.loadSFX(sound));
+        }
 
         function isLoaded(element) {
             return element.isLoaded === true;
@@ -156,6 +159,7 @@
     }
 
     function startLevel(level) {
+        ms.sound.playMusic("SpazzmaticaPolka");
         monster = registerEntity(new ms.Monster(ctx, level.playerSpawn, levelSize));
         camera = new ms.Camera(monster, levelSize, baseSize);
     }
@@ -163,10 +167,6 @@
     function addResource(resource, path, image) {
         ms.imageManager.storeImage(path, image);
         resources.push(resource);
-    }
-
-    function addSoundResource(newResource) {
-        resources.push(newResource);
     }
 
     function registerEntity(entity) {

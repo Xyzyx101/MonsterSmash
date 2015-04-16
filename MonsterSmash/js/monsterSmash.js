@@ -2,7 +2,8 @@
     "use strict";
 
     var resourceQueue = []
-        , screens = {};
+        , screens = {}
+        , musicQueued = false;
 
     function loadModule(src, callback) {
         var queueEntry = {
@@ -32,7 +33,12 @@
             }
             ++total;
         }
-        return loaded / total;
+        if (musicQueued) {
+            return loaded / total;
+        } else {
+            return loaded / (total + 1); //queue cannot finish until after music init
+        }
+        
     }
 
     function setup() {
@@ -55,12 +61,21 @@
     }
 
     function init() {
+        if (!musicQueued && window.Howl && ms.sound) {
+            initMusic();
+        }
         if (ms.resourcesLoaded() < 1) {
             setTimeout(init, 0);
         } else {
             ms.gameManager.init();
             ms.input.init();
         }
+    }
+
+    function initMusic() {
+        musicQueued = true;
+        resourceQueue.push( ms.sound.loadMusic("SpazzmaticaPolka", {}) );
+        resourceQueue.push( ms.sound.loadMusic("RunAmok", {}) );
     }
 
     function showScreen(screenId) {
