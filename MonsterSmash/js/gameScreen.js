@@ -243,11 +243,11 @@
         }
       
         //DELETEME -- debug only
-        //buildingQuadtree.debugDraw(ctx);
-        //buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
-        entityQuadtree.debugDraw(ctx);
+        buildingQuadtree.debugDraw(ctx);
+        buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
+        //entityQuadtree.debugDraw(ctx);
         //entityQuadtree.retrieve(monster.getCollider(), null, ctx);
-        entityQuadtree.retrieve(monster.getAttackCollider(), null, ctx);
+        entityQuadtree.retrieve(monster.getAttackCollider(), null);
     }
 
     function killTick() {

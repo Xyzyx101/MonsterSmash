@@ -56,6 +56,7 @@
             , tileFinalPosition = []
             , collapseTime
             , collapseTimer
+            , edgeColliderWidth = 10
         ;
 
         collapseTime = 200 * size.height;
@@ -219,6 +220,7 @@
             for (var col = 0; col < size.width; ++col) {
                 var tileXOffset
                     , colliderWidth;
+                var tileYOffset = Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
                 if (col === 0) {
                     tileXOffset = Math.floor((tileSize.leftEdgeWidth - tileBB.width) * 0.5);
                     colliderWidth = Math.floor(tileBB.width * (tileSize.leftEdgeWidth / tileSize.centerWidth));
@@ -229,7 +231,6 @@
                     tileXOffset = Math.floor((tileSize.centerWidth - tileBB.width) * 0.5);
                     colliderWidth = tileBB.width;
                 }
-                var tileYOffset = Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
                 for (var row = 0; row < size.height; ++row) {
                     var parentObj = {
                         type: "building"
@@ -245,8 +246,49 @@
                     colliderY = location.y + row * tileSize.floorHeight + tileYOffset;
                     var collider = new ms.Collider(colliderX, colliderY, colliderWidth, tileBB.height, parentObj);
                     quadtree.insert(collider);
+
+                    if (row === 0) {
+                        addRoofCollider(col, quadtree, colliderX, colliderWidth);
+                    }
+                    if (col === 0) {
+                        addLeftEdgeCollider(row, quadtree);
+                    } else if (col === size.width - 1) {
+                        addRightEdgeCollider(row, quadtree);
+                    }
                 }
             }
+        }
+
+        function addLeftEdgeCollider(row, quadtree) {
+            var colliderX = location.x - edgeColliderWidth;
+            var colliderY = location.y + row * tileSize.floorHeight + Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
+            var parentObj = {
+                type: "leftEdge"
+                , obj: this
+            };
+            var collider = new ms.Collider(colliderX, colliderY, edgeColliderWidth, tileBB.height, parentObj);
+            quadtree.insert(collider);
+        }
+
+        function addRightEdgeCollider(row, quadtree) {
+            var colliderX = location.x + tileSize.leftEdgeWidth + (col - 2) * tileSize.centerWidth + tileSize.rightEdgeWidth;
+            var colliderY = location.y + row * tileSize.floorHeight + Math.floor((tileSize.floorHeight - tileBB.height) * 0.5);
+            var parentObj = {
+                type: "rightEdge"
+                , obj: this
+            };
+            var collider = new ms.Collider(colliderX, colliderY, edgeColliderWidth, tileBB.height, parentObj);
+            quadtree.insert(collider);
+        }
+
+        function addRoofCollider(col, quadtree, colliderX, colliderWidth) {
+            var colliderY = location.y - edgeColliderWidth;
+            var parentObj = {
+                type: "roof"
+                , obj: this
+            };
+            var collider = new ms.Collider(colliderX, colliderY, colliderWidth, edgeColliderWidth, parentObj);
+            quadtree.insert(collider);
         }
 
         function isTileDestroyed(row, col) {
