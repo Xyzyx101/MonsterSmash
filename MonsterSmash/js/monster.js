@@ -648,11 +648,9 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                }
                if (isStanding) {
                    FSM.changeState("Idle");
-               }
-               if (isTouchingBuilding) {
+               } else if (isTouchingBuilding) {
                    FSM.changeState("VertIdle");
-               }
-               if (isTouchingEdge) {
+               } else if  (isTouchingEdge) {
                    if (isTouchingEdge.type === "rightEdge") {
                        flip = true;
                        position.x = isTouchingEdge.wallPosition - bbOffset.x;
@@ -670,6 +668,8 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                            FSM.changeState("VertIdle");
                        }
                    }
+               } else {
+                   FSM.changeState("Fall");
                }
            }
            , after: function () {
@@ -698,8 +698,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                }
                if (isStanding) {
                    FSM.changeState("Idle");
-               }
-               if (isTouchingEdge) {
+               } else if (isTouchingEdge) {
                    if (isTouchingEdge.type === "rightEdge") {
                        flip = true;
                        position.x = isTouchingEdge.wallPosition - bbOffset.x;
