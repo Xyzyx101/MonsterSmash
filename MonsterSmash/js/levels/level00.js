@@ -19,23 +19,27 @@
     , buildings: [
         
         {
-            buildingStyle: 1
-            , xPos: 300
+            buildingStyle: 0
+            , xPos: 200
             , size: { width: 8, height: 6 }
         }, {
-            buildingStyle: 1
-            , xPos: 900
+            buildingStyle: 3
+            , xPos: 800
             , size: { width: 3, height: 9 }
         }, {
-            buildingStyle: 1
+            buildingStyle: 2
+            , xPos: 1150
+            , size: { width: 3, height: 2 }
+        }, {
+            buildingStyle: 2
+            , xPos: 1350
+            , size: { width: 3, height: 2 }
+        }, {
+            buildingStyle: 5
             , xPos: 1700
             , size: { width: 5, height: 4 }
         }
-        /*{
-            buildingStyle: 1
-            , xPos: 300
-            , size: { width: 3, height: 2 }
-        }*/
+        
     ]
     , spawners:[
         {
