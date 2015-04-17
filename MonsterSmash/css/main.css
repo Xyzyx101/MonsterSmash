@@ -41,8 +41,8 @@ body {
     line-height: 0.88em;
     margin: 1em auto 0.5em;
     text-align: center;
-    color: rgb(28, 37, 217);
-    text-shadow: 0.03em 0.03em 0.05em rgb(153, 2, 5), -0.03em -0.03em 0.03em rgb(128, 132, 227), 0.12em 0.18em 0.1em rgb(60,1,1);
+    color: rgb(7, 8, 172);
+    text-shadow: 0.03em 0.03em 0.05em rgb(134, 4, 4), -0.03em -0.03em 0.03em rgb(17,202,203);, 0.12em 0.18em 0.1em rgb(60,1,1);
 }
 
 #game {
@@ -76,7 +76,7 @@ body {
 
 .continue {
     font-family: Roboto-Condensed, Arial, sans-serif;
-    color: rgb(7, 168, 172);
+    color: rgb(233,188,4);
     text-shadow: 0.2em 0.2em 0.3em rgb(60,1,1);
     text-align: center;
 }
@@ -105,18 +105,18 @@ ul.menu {
         .screen button {
             font-family: Roboto-Condensed, Arial, sans-serif;
             font-size: 0.6em;
-            color: rgb(28,217,217);
+            color: rgb(233,188,4);
             width: 10em;
             height: 1.5em;
             background: rgb(17, 22, 203);
-            border: 0.1em solid rgb(7, 168, 172);
+            border: 0.1em solid rgb(219,145,1);;
             border-radius: 0.5em;
             box-shadow: 0.2em 0.2em 0.3em rgb(60,1,1);
         }
 
             ul.menu li button:hover,
             .screen button:hover {
-                color: rgb(128,227,227);
+                color: rgb(192,48,0);
                 background: rgb(28,37,217);
             }
 
