@@ -99,6 +99,7 @@
         entities.dirty = false;
         resources = [];
         buildings = [];
+        buildings.dirty = true; //only builds quadtree when flag is set
         monster = null;
         levelSize = level.levelSize;
         backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background, levelSize);
@@ -215,9 +216,11 @@
             for (i = 0, len = entities.length; i < len; ++i) {
                 entities[i].update(fixedUpdateTime);
             }
-            buildingQuadtree.clear();
-            for (i = 0, len = buildings.length; i < len; ++i) {
-                buildings[i].addCollidersToQuadtree(buildingQuadtree);
+            if (buildings.dirty) {
+                buildingQuadtree.clear();
+                for (i = 0, len = buildings.length; i < len; ++i) {
+                    buildings[i].addCollidersToQuadtree(buildingQuadtree);
+                }
             }
             entityQuadtree.clear();
             for (i = 0, len = entities.length; i < len; ++i) {
@@ -300,7 +303,7 @@
         entities = newEntities;
     }
 
-    function markBuildingsDirty() {
+    function markBuildingsDirty() {        
         var newBuildings = [];
         for (var buildingIndex = 0, buildingLen = buildings.length; buildingIndex < buildingLen; ++buildingIndex) {
             var building = buildings[buildingIndex];
@@ -311,6 +314,7 @@
             }
         }
         buildings = newBuildings;
+        buildings.dirty = true;
     }
 
     function displayLoadOverlay() {
