@@ -10,6 +10,10 @@
                     menuAction(action);
                 }
             });
+            // disable touchmove to prevent overscroll
+            ms.dom.bind(document, "touchmove", function (event) {
+                event.preventDefault();
+            });
         }
         initialized = true;
         ms.sound.playMusic("RunAmok");
