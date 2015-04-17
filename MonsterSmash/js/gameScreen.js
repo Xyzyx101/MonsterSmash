@@ -22,7 +22,6 @@
         , gravity = 1
         , monster
         , camera
-        , spawner
     ;
 
     function run() {
@@ -105,7 +104,7 @@
             buildings.push(newBuilding);
         }
         var sprites = level.resources.sprites;
-        for (var spriteIndex = 0, len = sprites.length; spriteIndex < len; ++spriteIndex) {
+        for (var spriteIndex = 0, spriteLen = sprites.length; spriteIndex < spriteLen; ++spriteIndex) {
             ms.loadModule("sprites/" + sprites[spriteIndex] + ".js");
             var src = "sprites/" + sprites[spriteIndex] + ".png";
             if (!ms.imageManager.getImage(src)) {
@@ -174,6 +173,7 @@
         return entity;
     }
 
+    /* DELETEME - is this used? */
     function destroy(entity) {
         var index = entities.indexOf(entity);
         entities.splice(index, 1);
@@ -196,7 +196,6 @@
         var totalTime = dt + leftOverTime;
         ms.Spawner.update(dt);
         while (totalTime > fixedUpdateTime) {
-            var totalEntities = entities.length;
             var i, len;
             for (i = 0, len = entities.length; i < len; ++i) {
                 entities[i].update(fixedUpdateTime);
@@ -216,7 +215,7 @@
             hits = entityQuadtree.retrieve(monster.getCollider());
             monster.collideEntities(hits);
             if (monster.isAttacking()) {
-                hits = entityQuadtree.retrieve(monster.getAttackCollider());
+                hits = entityQuadtree.retrieve(monster.getAttackCollider(), null);
                 hits = hits.concat(buildingQuadtree.retrieve(monster.getAttackCollider(), null));
                 monster.attackEntities(hits);
             }
@@ -243,11 +242,11 @@
         }
       
         //DELETEME -- debug only
-        buildingQuadtree.debugDraw(ctx);
-        buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
+        //buildingQuadtree.debugDraw(ctx);
+        //buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
         //entityQuadtree.debugDraw(ctx);
         //entityQuadtree.retrieve(monster.getCollider(), null, ctx);
-        entityQuadtree.retrieve(monster.getAttackCollider(), null);
+        entityQuadtree.retrieve(monster.getAttackCollider(), null, ctx);
     }
 
     function killTick() {

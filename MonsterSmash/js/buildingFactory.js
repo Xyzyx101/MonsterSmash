@@ -43,7 +43,6 @@
             , buildingHP
             , tileHP = []
             , tileDamage = []
-            , tileColliders = []
             , damageOffset
             , tileBB = { width: 44, height: 44 }
             , maxDamage
@@ -102,7 +101,7 @@
             var collapseRatio = 1 - (collapseTimer / collapseTime);
             for (var col = 0; col < size.width; ++col) {
                 for (var row = 0; row < size.height; ++row) {
-                    var posX, posY, rot;
+                    var posX, posY;
                     posX = tileInitialPosition[col][row].x + (tileFinalPosition[col][row].x - tileInitialPosition[col][row].x) * collapseRatio;
                     posY = tileInitialPosition[col][row].y + (tileFinalPosition[col][row].y - tileInitialPosition[col][row].y) * collapseRatio;
                     tilePosition[col][row] = { x: posX, y: posY };

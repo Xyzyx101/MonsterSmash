@@ -97,7 +97,7 @@
     function isTouchEnabled() {
         var msTouchEnabled = window.navigator.msMaxTouchPoints;
         var generalTouchEnabled = "ontouchstart" in document.createElement("div");
-        if (msTouchEneabled || generalTouchEnabled) {
+        if (msTouchEnabled || generalTouchEnabled) {
             return true;
         }
         return false;

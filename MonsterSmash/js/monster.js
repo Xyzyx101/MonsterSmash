@@ -128,23 +128,8 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     ));
     renderComp.addAnim(new ms.Anim(
-       "VertAttackSideways"
-        , ["MonsterAnimVert_AttackUp.0057.png"
-            , "MonsterAnimVert_AttackUp.0058.png"
-            , "MonsterAnimVert_AttackUp.0059.png"
-            , "MonsterAnimVert_AttackUp.0060.png"
-            , "MonsterAnimVert_AttackUp.0061.png"
-            , "MonsterAnimVert_AttackUp.0062.png"
-            , "MonsterAnimVert_AttackUp.0063.png"
-            , "MonsterAnimVert_AttackUp.0064.png"
-            , "MonsterAnimVert_AttackUp.0065.png"
-            , "MonsterAnimVert_AttackUp.0066.png"]
-        , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    ));
-    renderComp.addAnim(new ms.Anim(
        "VertAttackUp"
-        , ["MonsterAnimVert_AttackUp.0057.png"
-            , "MonsterAnimVert_AttackUp.0058.png"
+        , ["MonsterAnimVert_AttackUp.0058.png"
             , "MonsterAnimVert_AttackUp.0059.png"
             , "MonsterAnimVert_AttackUp.0060.png"
             , "MonsterAnimVert_AttackUp.0061.png"
@@ -153,7 +138,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , "MonsterAnimVert_AttackUp.0064.png"
             , "MonsterAnimVert_AttackUp.0065.png"
             , "MonsterAnimVert_AttackUp.0066.png"]
-        , [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        , [0, 1, 2, 3, 4, 5, 6, 7, 8]
     ));
     renderComp.addAnim(new ms.Anim(
        "VertClimb"
@@ -246,7 +231,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , "MonsterAnim_Jump.0112.png"
             , "MonsterAnim_Jump.0113.png"
             , "MonsterAnim_Jump.0114.png"]
-        , [0, 1, 2, 3, 4, 5, 6]
+        , [0, 1, 2, 3, 4, 4, 5, 5, 6, 6]
     ));
     renderComp.addAnim(new ms.Anim(
     "Punch"
@@ -343,12 +328,11 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 vel.x = 0;
             }
             , state: function (dt) {
-                if (isTouchingBuilding && (getHeld(ACTION.UP) || getHeld(ACTION.DOWN))) {
+                if (isTouchingBuilding
+                    && getHeld(ACTION.ATTACK)
+                    && (getHeld(ACTION.UP) || getHeld(ACTION.DOWN))) {
                     position.y -= 10;
                     FSM.changeState("VertIdle");
-                }
-                if (getPressed(ACTION.ATTACK)) {
-                    FSM.changeState("Attack");
                 }
                 if (getPressed(ACTION.JUMP)) {
                     FSM.changeState("Jump");
@@ -359,6 +343,18 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 } else if (getHeld(ACTION.LEFT)) {
                     vel.x = -walkSpeed;
                     FSM.changeState("Walk");
+                }
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("Attack");
+                }
+                if (getHeld(ACTION.UP)) {
+                    if (isTouchingBuilding) {
+                        position.y -= 10;
+                        FSM.changeState("VertIdle");
+                    } else if (isTouchingEdge) {
+                        position.y -= 10;
+                        FSM.changeState("WallIdle");
+                    }
                 }
                 fall();
             }
@@ -375,15 +371,14 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             before: function () {
                 renderComp.changeAnim("Idle");
                 vel = { x: 0, y: 0 };
-                position.y = isTouchingRoof.roofPosition - frameSize.height;
+                if (isTouchingRoof) {
+                    position.y = isTouchingRoof.roofPosition - frameSize.height;
+                }
             }
             , state: function (dt) {
-                if ( getHeld(ACTION.DOWN)) {
+                if (getHeld(ACTION.DOWN)) {
                     position.y += 20;
                     FSM.changeState("VertIdle");
-                }
-                if (getPressed(ACTION.ATTACK)) {
-                    FSM.changeState("Attack");
                 }
                 if (getPressed(ACTION.JUMP)) {
                     FSM.changeState("Jump");
@@ -394,6 +389,12 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 } else if (getHeld(ACTION.LEFT)) {
                     vel.x = -walkSpeed;
                     FSM.changeState("RoofWalk");
+                }
+                if (!isTouchingRoof) {
+                    FSM.changeState("Fall");
+                }
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("RoofAttack");
                 }
             }
             , after: function () {
@@ -417,17 +418,24 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 if (getPressed(ACTION.JUMP)) {
                     FSM.changeState("Jump");
                 }
-
-                if (getHeld(ACTION.UP) && isTouchingBuilding) {
-                    position.y -= 10;
-                    FSM.changeState("VertIdle");
-                }
                 if (getHeld(ACTION.RIGHT)) {
                     vel.x = walkSpeed;
                 } else if (getHeld(ACTION.LEFT)) {
                     vel.x = -walkSpeed;
                 } else {
                     FSM.changeState("Idle");
+                }
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("Attack");
+                }
+                if (getHeld(ACTION.UP)) {
+                    if (isTouchingBuilding) {
+                        position.y -= 10;
+                        FSM.changeState("VertIdle");
+                    } else if (isTouchingEdge) {
+                        position.y -= 10;
+                        FSM.changeState("WallIdle");
+                    }
                 }
                 if (vel.x > 0) {
                     flip = false;
@@ -461,6 +469,12 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 } else if (vel.x < 0) {
                     flip = true;
                 }
+                if (!isTouchingRoof) {
+                    FSM.changeState("Fall");
+                }
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("RoofAttack");
+                }
             }
             , after: function () {
 
@@ -484,10 +498,13 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 jumpTimer -= dt;
                 if (jumpTimer < 0) {
                     if (flip) {
-                        vel = { x: -8, y: -15 };
+                        vel = { x: -5, y: -10 };
                     } else {
-                        vel = { x: 8, y: -15 };
+                        vel = { x: 5, y: -10 };
                     }
+                }
+                if (getHeld(ACTION.ATTACK)) {
+                    FSM.changeState("JumpAttack");
                 }
             }
             , after: function () {
@@ -510,6 +527,9 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 if (isStanding) {
                     FSM.changeState("Idle");
                 }
+                if (getHeld(ACTION.ATTACK)) {
+                    FSM.changeState("JumpAttack");
+                }
                 fall();
             }
             , after: function () {
@@ -530,12 +550,17 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                     || (getHeld(ACTION.DOWN))) {
                     FSM.changeState("VertClimb");
                 }
-
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("VertAttack");
+                }
                 if (isStanding) {
                     FSM.changeState("Idle");
                 }
                 if (!isTouchingBuilding) {
                     FSM.changeState("Fall");
+                }
+                if (getPressed(ACTION.JUMP)) {
+                    FSM.changeState("Jump");
                 }
             }
             , after: function () {
@@ -552,29 +577,32 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 if (getPressed(ACTION.JUMP)) {
                     FSM.changeState("Jump");
                 }
+                if (getPressed(ACTION.ATTACK)) {
+                    FSM.changeState("VertAttack");
+                }
                 if (getHeld(ACTION.LEFT)) {
                     vel = { x: -climbSpeed, y: 0 };
-                    if (lastClimbDirection != ACTION.LEFT) {
+                    if (lastClimbDirection !== ACTION.LEFT) {
                         renderComp.changeAnim("VertClimbSideways");
                     }
                     lastClimbDirection = ACTION.LEFT;
                     flip = true;
                 } else if (getHeld(ACTION.RIGHT)) {
                     vel = { x: climbSpeed, y: 0 };
-                    if (lastClimbDirection != ACTION.RIGHT) {
+                    if (lastClimbDirection !== ACTION.RIGHT) {
                         renderComp.changeAnim("VertClimbSideways");
                     }
                     lastClimbDirection = ACTION.RIGHT;
                     flip = false;
                 } else if (getHeld(ACTION.UP)) {
                     vel = { x: 0, y: -climbSpeed };
-                    if (lastClimbDirection != ACTION.UP) {
+                    if (lastClimbDirection !== ACTION.UP) {
                         renderComp.changeAnim("VertClimb");
                     }
                     lastClimbDirection = ACTION.UP;
                 } else if (getHeld(ACTION.DOWN)) {
                     vel = { x: 0, y: climbSpeed };
-                    if (lastClimbDirection != ACTION.DOWN) {
+                    if (lastClimbDirection !== ACTION.DOWN) {
                         renderComp.changeAnim("VertClimb");
                     }
                     lastClimbDirection = ACTION.DOWN;
@@ -582,17 +610,19 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 } else {
                     FSM.changeState("VertIdle");
                 }
-
                 if (isStanding) {
                     FSM.changeState("Idle");
                 }
                 if (!isTouchingBuilding) {
                     if (isTouchingRoof) {
                         FSM.changeState("RoofIdle");
+                    } else if (isTouchingEdge) {
+                        FSM.changeState("WallWalk");
                     } else {
                         FSM.changeState("Fall");
                     }
                 }
+                checkGround();
             }
             , after: function () {
 
@@ -610,6 +640,12 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                    || (getHeld(ACTION.DOWN))) {
                    FSM.changeState("WallWalk");
                }
+               if (getPressed(ACTION.ATTACK)) {
+                   FSM.changeState("WallAttack");
+               }
+               if (getPressed(ACTION.JUMP)) {
+                   FSM.changeState("Jump");
+               }
                if (isStanding) {
                    FSM.changeState("Idle");
                }
@@ -620,7 +656,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                    if (isTouchingEdge.type === "rightEdge") {
                        flip = true;
                        position.x = isTouchingEdge.wallPosition - bbOffset.x;
-                       
+
                        if (getPressed(ACTION.LEFT)) {
                            position.x -= 20;
                            FSM.changeState("VertIdle");
@@ -628,7 +664,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                    } else {
                        flip = false;
                        position.x = isTouchingEdge.wallPosition - frameSize.width + bbOffset.x;
-                       
+
                        if (getPressed(ACTION.RIGHT)) {
                            position.x += 20;
                            FSM.changeState("VertIdle");
@@ -647,12 +683,18 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                renderComp.changeAnim("WallWalk");
            }
            , state: function (dt) {
-               if (getHeld(ACTION.UP) ) {
+               if (getHeld(ACTION.UP)) {
                    vel.y = -climbSpeed;
-               } else if(getHeld(ACTION.DOWN)) {
+               } else if (getHeld(ACTION.DOWN)) {
                    vel.y = climbSpeed;
                } else {
                    FSM.changeState("WallIdle");
+               }
+               if (getPressed(ACTION.ATTACK)) {
+                   FSM.changeState("WallAttack");
+               }
+               if (getPressed(ACTION.JUMP)) {
+                   FSM.changeState("Jump");
                }
                if (isStanding) {
                    FSM.changeState("Idle");
@@ -660,7 +702,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                if (isTouchingEdge) {
                    if (isTouchingEdge.type === "rightEdge") {
                        flip = true;
-                       position.x = isTouchingEdge.wallPosition - bbOffset.x;;
+                       position.x = isTouchingEdge.wallPosition - bbOffset.x;
                    } else {
                        flip = false;
                        position.x = isTouchingEdge.wallPosition - frameSize.width + bbOffset.x;
@@ -668,6 +710,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                } else {
                    FSM.changeState("Fall");
                }
+               checkGround();
            }
            , after: function () {
 
@@ -690,11 +733,133 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
 
                     renderComp.changeAnim("Punch", standingAttackComplete);
                 }
+                vel = { x: 0, y: 0 };
             }
             , state: function (dt) {
                 if (attackCollider.active) {
                     if (attackHit && attackHit.parentObject.type === "Policeman") {
                         renderComp.changeAnim("Eat", standingAttackComplete);
+                    }
+                }
+                attackCollider.active = false;
+            }
+            , after: function () {
+
+            }
+        });
+    FSM.addState("JumpAttack",
+        {
+            before: function () {
+                attackHit = null;
+                attackCollider.active = true;
+                if (getHeld(ACTION.UP)) {
+                    attackCollider.offset(Math.floor((frameSize.width - attackColliderSize.width) * 0.5), -attackColliderSize.height + bbOffset.y);
+                    renderComp.changeAnim("AirPunchUp", standingAttackComplete);
+                } else {
+                    if (flip) {
+                        attackCollider.offset(bbOffset.x - attackColliderSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                    } else {
+                        attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                    }
+
+                    renderComp.changeAnim("AirPunch", standingAttackComplete);
+                }
+                vel = { x: 0, y: 0 };
+            }
+            , state: function (dt) {
+                attackCollider.active = false;
+                fall();
+            }
+            , after: function () {
+
+            }
+        });
+    FSM.addState("VertAttack",
+       {
+           before: function () {
+               attackHit = null;
+               attackCollider.active = true;
+               if (getHeld(ACTION.UP)) {
+                   attackCollider.offset(Math.floor((frameSize.width - attackColliderSize.width) * 0.5), -attackColliderSize.height + bbOffset.y);
+                   renderComp.changeAnim("VertAttackUp", vertAttackComplete);
+               } else if (getHeld(ACTION.RIGHT)) {
+                   attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                   renderComp.changeAnim("VertAttackSideways", vertAttackComplete);
+               } else if (getHeld(ACTION.LEFT)) {
+                   attackCollider.offset(bbOffset.x - attackColliderSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                   renderComp.changeAnim("VertAttackSideways", vertAttackComplete);
+               } else {
+                   attackCollider.offset(bbOffset.x + Math.floor((bbSize.width - attackColliderSize.width) * 0.5), bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                   renderComp.changeAnim("VertAttack", vertAttackComplete);
+               }
+               vel = { x: 0, y: 0 };
+           }
+           , state: function (dt) {
+               attackCollider.active = false;
+           }
+           , after: function () {
+
+           }
+       });
+    FSM.addState("WallAttack",
+       {
+           before: function () {
+               attackHit = null;
+               attackCollider.active = true;
+               if (isTouchingEdge.type === "leftEdge") {
+                   if (getHeld(ACTION.UP)) {
+                       attackCollider.offset(Math.floor((frameSize.width - attackColliderSize.width) * 0.5), -attackColliderSize.height + bbOffset.y);
+                       renderComp.changeAnim("WallPunchUp", wallAttackComplete);
+                   } else if (getHeld(ACTION.LEFT)) {
+                       attackCollider.offset(bbOffset.x - attackColliderSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                       renderComp.changeAnim("WallPunchBack", wallAttackComplete);
+                   } else {
+                       attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                       renderComp.changeAnim("WallPunch", wallAttackComplete);
+                   }
+               } else {
+                   if (getHeld(ACTION.UP)) {
+                       attackCollider.offset(Math.floor((frameSize.width - attackColliderSize.width) * 0.5), -attackColliderSize.height + bbOffset.y);
+                       renderComp.changeAnim("WallPunchUp", wallAttackComplete);
+                   } else if (getHeld(ACTION.RIGHT)) {
+                       attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                       renderComp.changeAnim("WallPunchBack", wallAttackComplete);
+                   } else {
+                       attackCollider.offset(bbOffset.x - attackColliderSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                       renderComp.changeAnim("WallPunch", wallAttackComplete);
+                   }
+               }
+               vel = { x: 0, y: 0 };
+           }
+           , state: function (dt) {
+               attackCollider.active = false;
+           }
+           , after: function () {
+
+           }
+       });
+    FSM.addState("RoofAttack",
+        {
+            before: function () {
+                attackHit = null;
+                attackCollider.active = true;
+                if (getHeld(ACTION.UP)) {
+                    attackCollider.offset(Math.floor((frameSize.width - attackColliderSize.width) * 0.5), -attackColliderSize.height + bbOffset.y);
+                    renderComp.changeAnim("PunchUp", roofAttackComplete);
+                } else {
+                    if (flip) {
+                        attackCollider.offset(bbOffset.x - attackColliderSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                    } else {
+                        attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
+                    }
+
+                    renderComp.changeAnim("Punch", roofAttackComplete);
+                }
+            }
+            , state: function (dt) {
+                if (attackCollider.active) {
+                    if (attackHit && attackHit.parentObject.type === "Policeman") {
+                        renderComp.changeAnim("Eat", roofAttackComplete);
                     }
                 }
                 attackCollider.active = false;
@@ -735,11 +900,15 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             vel.y = 0;
         } else {
             vel.y += gravity;
-            if (position.y + frameSize.height > groundLevel) {
-                vel.y = 0;
-                isStanding = true;
-                position.y = groundLevel - frameSize.height;
-            }
+            checkGround();
+        }
+    }
+
+    function checkGround() {
+        if (position.y + frameSize.height > groundLevel) {
+            vel.y = 0;
+            isStanding = true;
+            position.y = groundLevel - frameSize.height;
         }
     }
 
@@ -865,7 +1034,19 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
     }
 
     function standingAttackComplete() {
-        FSM.changeState("Idle");
+        FSM.changeState("Fall");
+    }
+
+    function roofAttackComplete() {
+        FSM.changeState("RoofIdle");
+    }
+
+    function wallAttackComplete() {
+        FSM.changeState("WallIdle");
+    }
+
+    function vertAttackComplete() {
+        FSM.changeState("VertIdle");
     }
 
     function getFrameSize() {
