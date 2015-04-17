@@ -101,8 +101,11 @@
     }
 
     function destroy() {
-        // TODO
-        console.log("TODO Meteor destroy");
+        ms.sound.play("powerUp");
+        this.kill = true;
+        ms.screens.gameScreen.markEntitiesDirty();
+        ms.gameManager.addPower(200);
+        ms.gameManager.addScore(500);
     }
 
     return {

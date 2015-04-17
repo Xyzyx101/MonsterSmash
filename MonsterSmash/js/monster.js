@@ -760,7 +760,6 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                     } else {
                         attackCollider.offset(bbOffset.x + bbSize.width, bbOffset.y + Math.floor((bbSize.height - attackColliderSize.height) * 0.5));
                     }
-
                     renderComp.changeAnim("AirPunch", standingAttackComplete);
                 }
                 vel = { x: 0, y: 0 };
@@ -1025,13 +1024,11 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             // Hit
             if (hit.parentObj.type === "meteor") {
                 FSM.changeState("Eat");
-                hit.parentObj.obj.kill = true;
-                ms.screens.gameScreen.markEntitiesDirty();
-                ms.gameManager.addPower(200);
-                ms.gameManager.addScore(500);
+                hit.parentObj.obj.destroy();
                 continue;
             }
             if (hit.parentObj.type === "bullet") {
+                ms.sound.play("roar01");
                 hit.parentObj.obj.destroy();
                 continue;
             }

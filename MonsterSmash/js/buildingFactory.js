@@ -200,6 +200,7 @@
         }
 
         function destroyBuilding() {
+            ms.sound.play("collapse");
             spawnMeteor();
             ms.gameManager.addScore(size.width * size.height * 50);
             tileFinalPosition = [];
