@@ -17,6 +17,7 @@
         if (ms.gameManager.isDead()) {
             document.getElementById("levelCompleteMessage").textContent = "You Died";
             document.getElementById("levelCompleteButton").textContent = "Main Menu";
+            
             ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
                 clearTimeout(timeoutID);
                 ms.showScreen("mainMenu");

@@ -14,7 +14,7 @@
     , resources: {
         audio: ["collapse", "eat", "gun", "machineGun", "powerUp", "roar01", "punch"]
         , images: [""]
-        , sprites: ["monsterSprite", "PoliceCarSprite", "ProjectileSprite"]
+        , sprites: ["monsterSprite", "PoliceCarSprite", "ProjectileSprite", "PolicemanSprite"]
     }
     , buildings: [
         {

@@ -1032,6 +1032,10 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 ms.gameManager.addScore(500);
                 continue;
             }
+            if (hit.parentObj.type === "bullet") {
+                hit.parentObj.obj.destroy();
+                continue;
+            }
         }
     }
 
@@ -1074,6 +1078,12 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                     continue;
                 }
                 if (hit.parentObj.type === "policeCar") {
+                    hit.parentObj.obj.destroy();
+                    buildingHit = null; //can only hit building if there are no enemies
+                    break;
+                }
+                if (hit.parentObj.type === "policeman") {
+                    FSM.changeState("Eat");
                     hit.parentObj.obj.destroy();
                     buildingHit = null; //can only hit building if there are no enemies
                     break;

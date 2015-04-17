@@ -239,7 +239,8 @@
     }
 
     function spawnPolice() {
-        console.log("TODO police man goes here");
+        var policeman = new ms.Policeman(ctx, { x: position.x + frameSize.width * 0.5, y: position.y + frameSize.height * 0.5 });
+        ms.screens.gameScreen.registerEntity(policeman);
     }
 
     function getCollider() {

@@ -102,7 +102,7 @@
 
     function destroy() {
         // TODO
-        console.log("TODO Meteor car destroy");
+        console.log("TODO Meteor destroy");
     }
 
     return {
