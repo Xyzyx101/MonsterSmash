@@ -151,6 +151,7 @@
                 startLevel(level);
                 hideLoadOverlay();
                 ms.gameManager.setLevelLoaded(true);
+                lastTick = null;
                 frameRequestId = window.requestAnimationFrame(tick);
             } else {
                 setTimeout(verifyAllResourcesLoaded, 0);
@@ -183,8 +184,13 @@
         entities.splice(index, 1);
     }
 
-    var lastTick = 0;
+    var lastTick = null;
     function tick(tickTime) {
+        if (!lastTick) {
+            lastTick = tickTime;
+            frameRequestId = window.requestAnimationFrame(tick);
+            return;
+        }
         var dt = tickTime - lastTick;
         lastTick = tickTime;
         update(dt);

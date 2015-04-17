@@ -888,13 +888,12 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         position.y += vel.y * dt * 0.05;
         checkLevelBounds();
         renderComp.animate(dt);
-        FSM.debug("Monster");
-        //console.log("isTouchingBuilding:" + isTouchingBuilding + " isTouchingEdge:" + isTouchingEdge + " isTouchingRoof:" + isTouchingRoof);
+        //FSM.debug("Monster");
     }
 
     function render() {
         renderComp.displayAnim(position.x, position.y, flip);
-        debugDraw();
+        //debugDraw();
     }
 
     function debugDraw() {

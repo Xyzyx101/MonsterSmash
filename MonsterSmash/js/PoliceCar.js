@@ -194,7 +194,6 @@
                 renderComp.changeAnim("Drive");
             }
             , state: function (dt) {
-                console.log(position.x);
                 var driveSpeed;
                 var monsterCenter = monster.getCenter();
                 if (monsterCenter.x < position.x) {
