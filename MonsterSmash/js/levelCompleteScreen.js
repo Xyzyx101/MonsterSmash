@@ -14,21 +14,28 @@
         powerMeterElement = ms.dom.$("#levelCompleteScreen .power")[0];
         displayScore = ms.gameManager.getScore();
         displayPower = ms.gameManager.getPower();
+        ms.dom.unbind("#levelCompleteScreen .nextButton", "click", toMain);
+        ms.dom.unbind("#levelCompleteScreen .nextButton", "click", toNext);
         if (ms.gameManager.isDead()) {
             document.getElementById("levelCompleteMessage").textContent = "You Died";
-            document.getElementById("levelCompleteButton").textContent = "Main Menu";
-            
-            ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
-                clearTimeout(timeoutID);
-                ms.showScreen("mainMenu");
-            });
+            document.getElementById("levelCompleteButton").textContent = "Main Menu";          
+            ms.dom.bind("#levelCompleteScreen .nextButton", "click",toMain);
         } else {
-            ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
-                clearTimeout(timeoutID);
-                ms.showScreen("gameScreen");
-            });
+            document.getElementById("levelCompleteMessage").textContent = "Level Complete";
+            document.getElementById("levelCompleteButton").textContent = "Next Level";
+            ms.dom.bind("#levelCompleteScreen .nextButton", "click", toNext);
         }
         timeoutID = window.setTimeout(update, 50);
+    }
+
+    function toMain(e) {
+        clearTimeout(timeoutID);
+        ms.showScreen("mainMenu");
+    }
+
+    function toNext(e) {
+        clearTimeout(timeoutID);
+        ms.showScreen("gameScreen");
     }
 
     function update() {

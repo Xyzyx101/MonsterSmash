@@ -20,7 +20,7 @@
         {
             buildingStyle: 0
             , xPos: 200
-            , size: { width: 8, height: 6 }
+            , size: { width: 6, height: 5 }
         }, {
             buildingStyle: 3
             , xPos: 800

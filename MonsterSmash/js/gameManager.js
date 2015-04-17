@@ -1,4 +1,5 @@
 ﻿ms.gameManager = (function () {
+    "use strict";
     var currentLevel
         , score
         , power
@@ -16,7 +17,7 @@
         currentLevel = -1;
         score = 0;
         power = MAX_POWER;
-        isDead = false;
+        dead = false;
         levelLoaded = false;
     }
 

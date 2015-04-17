@@ -8,7 +8,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         , groundLevel = ms.screens.gameScreen.getGroundLevel()
         , gravity = ms.screens.gameScreen.getGravity()
         , frameSize = { width: 160, height: 140 }
-        , position = initialPosition
+        , position = { x: initialPosition.x, y: initialPosition.y }
         , bbSize = { width: 74, height: 90 }  // Bounding box is centered in x and at the bottom in y
         , bbOffset = {
             x: Math.floor((frameSize.width - bbSize.width) * 0.5)

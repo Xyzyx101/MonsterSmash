@@ -140,6 +140,13 @@ ms.dom = (function () {
         element.addEventListener(event, handler, false);
     }
 
+    function unbind(element, event, handler) {
+        if (typeof element === "string") {
+            element = $(element)[0];
+        }
+        element.removeEventListener(event, handler, false);
+    }
+
     function transform(element, value) {
         if ("transform" in element.style) {
             element.style.transform = value;
@@ -158,6 +165,7 @@ ms.dom = (function () {
         , addClass: addClass
         , removeClass: removeClass
         , bind: bind
+        , unbind: unbind
         , transform: transform
     };
 })();
