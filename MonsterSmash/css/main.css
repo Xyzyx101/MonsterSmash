@@ -42,7 +42,7 @@ body {
     margin: 1em auto 0.5em;
     text-align: center;
     color: rgb(7, 8, 172);
-    text-shadow: 0.03em 0.03em 0.05em rgb(134, 4, 4), -0.03em -0.03em 0.03em rgb(17,202,203);, 0.12em 0.18em 0.1em rgb(60,1,1);
+    text-shadow: 0.03em 0.03em 0.05em rgb(134, 4, 4), -0.03em -0.03em 0.03em rgb(17,202,203), 0.12em 0.18em 0.1em rgb(60,1,1);
 }
 
 #game {
@@ -109,7 +109,7 @@ ul.menu {
             width: 10em;
             height: 1.5em;
             background: rgb(17, 22, 203);
-            border: 0.1em solid rgb(219,145,1);;
+            border: 0.1em solid rgb(219,145,1);
             border-radius: 0.5em;
             box-shadow: 0.2em 0.2em 0.3em rgb(60,1,1);
         }

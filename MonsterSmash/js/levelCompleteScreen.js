@@ -14,10 +14,19 @@
         powerMeterElement = ms.dom.$("#levelCompleteScreen .power")[0];
         displayScore = ms.gameManager.getScore();
         displayPower = ms.gameManager.getPower();
-        ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
-            clearTimeout(timeoutID);
-            ms.showScreen("gameScreen");
-        });
+        if (ms.gameManager.isDead()) {
+            document.getElementById("levelCompleteMessage").textContent = "You Died";
+            document.getElementById("levelCompleteButton").textContent = "Main Menu";
+            ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
+                clearTimeout(timeoutID);
+                ms.showScreen("mainMenu");
+            });
+        } else {
+            ms.dom.bind("#levelCompleteScreen .nextButton", "click", function (e) {
+                clearTimeout(timeoutID);
+                ms.showScreen("gameScreen");
+            });
+        }
         timeoutID = window.setTimeout(update, 50);
     }
 

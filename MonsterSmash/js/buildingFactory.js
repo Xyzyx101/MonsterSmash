@@ -177,6 +177,7 @@
                 return;
             } else if (thisTileDamage === renderStyle.HEAVYDAMAGE) {
                 tileDamage[tile.col][tile.row] = renderStyle.DESTROYED;
+                ms.gameManager.addScore(100);
                 ++buildingDamage;
                 checkDestroyed();
             } else if (thisTileDamage === renderStyle.DAMAGE) {
@@ -199,6 +200,8 @@
         }
 
         function destroyBuilding() {
+            spawnMeteor();
+            ms.gameManager.addScore(size.width * size.height * 50);
             tileFinalPosition = [];
             tileFinalRotation = [];
             for (var col = 0; col < size.width; ++col) {
@@ -213,6 +216,16 @@
                 }
             }
             collapseTimer = collapseTime;
+        }
+
+        function spawnMeteor() {
+            var randX = Math.floor(Math.random() * size.width);
+            var randY = Math.floor(Math.random() * size.height);
+            var newPos = tileInitialPosition[randX][randY];
+            var randXVelocity = Math.random() * 6 - 3;
+            var randYVelocity = Math.random() * 5;
+            var meteor = new ms.MeteorChunk(ctx, { x: newPos.x, y: newPos.y }, { x: randXVelocity, y: randYVelocity });
+            ms.screens.gameScreen.registerEntity(meteor);
         }
 
         function addCollidersToQuadtree(quadtree) {

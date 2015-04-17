@@ -22,10 +22,12 @@
         , gravity = 1
         , monster
         , camera
+        , powerTime = 5000
+        , powerTimer
     ;
 
     function run() {
-        if (ms.gameManager.levelLoaded) {
+        if (ms.gameManager.isLevelLoaded()) {
             return;
         }
 
@@ -92,6 +94,7 @@
         entities.dirty = false;
         resources = [];
         buildings = [];
+        monster = null;
         levelSize = level.levelSize;
         backgroundLayer = new ms.BackgroundLayer(bgCtx, level.background, levelSize);
         for (var building = 0, len = level.buildings.length; building < len; ++building) {
@@ -147,7 +150,7 @@
             if (loaded.length === resources.length && ms.resourcesLoaded() === 1) {
                 startLevel(level);
                 hideLoadOverlay();
-                ms.gameManager.levelLoaded = true;
+                ms.gameManager.setLevelLoaded(true);
                 frameRequestId = window.requestAnimationFrame(tick);
             } else {
                 setTimeout(verifyAllResourcesLoaded, 0);
@@ -161,6 +164,7 @@
         ms.sound.playMusic("SpazzmaticaPolka");
         monster = registerEntity(new ms.Monster(ctx, level.playerSpawn, levelSize));
         camera = new ms.Camera(monster, levelSize, baseSize);
+        powerTimer = powerTime;
     }
 
     function addResource(resource, path, image) {
@@ -223,7 +227,20 @@
             totalTime -= fixedUpdateTime;
         }
         leftOverTime = totalTime;
+        powerTimer -= dt;
+        if (powerTimer < 0) {
+            powerTimer = powerTime;
+            ms.gameManager.addPower(-50);
+        }
         updateUI();
+        if (ms.gameManager.getPower() <= 0) {
+            killTick();
+            ms.gameManager.endGame();
+        }
+        if (buildings.length === 0) {
+            killTick();
+            ms.gameManager.completeLevel();
+        }
         camera.update();
         if (entities.dirty) {
             killEntities();
@@ -246,7 +263,7 @@
         //buildingQuadtree.retrieve(monster.getCollider(), null, ctx);
         //entityQuadtree.debugDraw(ctx);
         //entityQuadtree.retrieve(monster.getCollider(), null, ctx);
-        entityQuadtree.retrieve(monster.getAttackCollider(), null, ctx);
+        //entityQuadtree.retrieve(monster.getAttackCollider(), null, ctx);
     }
 
     function killTick() {
@@ -411,5 +428,6 @@
         , getMonster: getMonster
         , markBuildingsDirty: markBuildingsDirty
         , markEntitiesDirty: markEntitiesDirty
+        , registerEntity: registerEntity
     };
 })();

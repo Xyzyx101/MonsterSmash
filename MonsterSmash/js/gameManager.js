@@ -3,7 +3,7 @@
         , score
         , power
         , MAX_POWER = 1000
-        , isDead = false
+        , dead = false
         , levelMap = []
         , levelLoaded = false
     ;
@@ -21,16 +21,21 @@
     }
 
     function nextLevel() {
+        if (currentLevel === levelMap.length - 1) {
+            currentLevel = -1;
+        }
         return levelMap[++currentLevel];
     }
 
     function endGame() {
-        isDead = true;
-        ms.showScreen("completeLevelScreen");
+        dead = true;
+        levelLoaded = false;
+        ms.showScreen("levelCompleteScreen");
     }
 
     function completeLevel() {
-        ms.showScreen("completeLevelScreen");
+        levelLoaded = false;
+        ms.showScreen("levelCompleteScreen");
     }
 
     function getScore() {
@@ -53,6 +58,25 @@
         power = newPower;
     }
 
+    function addPower(newPower) {
+        power += newPower;
+        if (power > MAX_POWER) {
+            power = MAX_POWER;
+        }
+    }
+
+    function isDead() {
+        return dead;
+    }
+
+    function setLevelLoaded(value) {
+        levelLoaded = value;
+    }
+
+    function isLevelLoaded() {
+        return levelLoaded;
+    }
+
     return {
         init: init
         , startNewGame: startNewGame
@@ -65,7 +89,10 @@
         , addScore: addScore
         , getPower: getPower
         , setPower: setPower
+        , addPower: addPower
         , MAX_POWER: MAX_POWER
+        , isLevelLoaded: isLevelLoaded
+        , setLevelLoaded: setLevelLoaded
     };
 })();
 

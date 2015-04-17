@@ -14,10 +14,9 @@
     , resources: {
         audio: ["collapse", "eat", "gun", "machineGun", "powerUp", "roar01", "punch"]
         , images: [""]
-        , sprites: ["monsterSprite", "PoliceCarSprite"]
+        , sprites: ["monsterSprite", "PoliceCarSprite", "ProjectileSprite"]
     }
     , buildings: [
-        
         {
             buildingStyle: 0
             , xPos: 200
@@ -39,7 +38,6 @@
             , xPos: 1700
             , size: { width: 5, height: 4 }
         }
-        
     ]
     , spawners:[
         {

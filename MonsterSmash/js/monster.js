@@ -867,12 +867,25 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
 
             }
         });
+    FSM.addState("Eat",
+        {
+            before: function () {
+                renderComp.changeAnim("Eat", function () { FSM.changeState("Idle"); });
+                ms.sound.play("eat");
+            }
+            , state: function (dt) {
+               
+            }
+            , after: function () {
+
+            }
+        });
     FSM.changeState("Idle");
 
     function update(dt) {
         FSM.update(dt);
-        position.x += vel.x;
-        position.y += vel.y;
+        position.x += vel.x * dt * 0.05;
+        position.y += vel.y * dt * 0.05;
         checkLevelBounds();
         renderComp.animate(dt);
         FSM.debug("Monster");
@@ -979,17 +992,13 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
     }
 
     function collideEntities(hits) {
-        //TODO
-    }
-
-    function attackEntities(hits) {
         if (hits.length === 0) {
             return;
         }
-        var bbTop = attackCollider.y
-            , bbBot = attackCollider.y + attackCollider.height
-            , bbLeft = attackCollider.x
-            , bbRight = attackCollider.x + attackCollider.width
+        var bbTop = position.y + bbOffset.y
+            , bbBot = position.y + frameSize.height
+            , bbLeft = position.x + bbOffset.x
+            , bbRight = position.x + bbOffset.x + bbSize.width
             , hitIndex = -1
             , hitsLen = hits.length
             , buildingHit
@@ -997,7 +1006,8 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
         while (++hitIndex < hitsLen) {
             var hit = hits[hitIndex];
             if (hit.parentObj.type === "monster"
-                || hit.parentObj.type === "projectile") {
+                || hit.parentObj.type === "projectile"
+                || hit.parentObj.type === "policeCar") {
                 // Ignore these types
                 continue;
             }
@@ -1014,59 +1024,102 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
                 continue;
             }
             // Hit
-            if (hit.parentObj.type === "building") {
-                if (!hit.parentObj.obj.isTileDestroyed(hit.parentObj.tile.row, hit.parentObj.tile.col)) {
-                    buildingHit = hit.parentObj;
-                }
+            if (hit.parentObj.type === "meteor") {
+                FSM.changeState("Eat");
+                hit.parentObj.obj.kill = true;
+                ms.screens.gameScreen.markEntitiesDirty();
+                ms.gameManager.addPower(200);
+                ms.gameManager.addScore(500);
                 continue;
             }
-            if (hit.parentObj.type === "policeCar") {
-                hit.parentObj.obj.destroy();
-                buildingHit = null; //can only hit building if there are no enemies
-                break;
+        }
+    }
+
+        function attackEntities(hits) {
+            if (hits.length === 0) {
+                return;
+            }
+            var bbTop = attackCollider.y
+                , bbBot = attackCollider.y + attackCollider.height
+                , bbLeft = attackCollider.x
+                , bbRight = attackCollider.x + attackCollider.width
+                , hitIndex = -1
+                , hitsLen = hits.length
+                , buildingHit
+            ;
+            while (++hitIndex < hitsLen) {
+                var hit = hits[hitIndex];
+                if (hit.parentObj.type === "monster"
+                    || hit.parentObj.type === "projectile") {
+                    // Ignore these types
+                    continue;
+                }
+                if (hit.x > bbRight) {
+                    continue;
+                }
+                if (hit.x + hit.width < bbLeft) {
+                    continue;
+                }
+                if (hit.y > bbBot) {
+                    continue;
+                }
+                if (hit.y + hit.height < bbTop) {
+                    continue;
+                }
+                // Hit
+                if (hit.parentObj.type === "building") {
+                    if (!hit.parentObj.obj.isTileDestroyed(hit.parentObj.tile.row, hit.parentObj.tile.col)) {
+                        buildingHit = hit.parentObj;
+                    }
+                    continue;
+                }
+                if (hit.parentObj.type === "policeCar") {
+                    hit.parentObj.obj.destroy();
+                    buildingHit = null; //can only hit building if there are no enemies
+                    break;
+                }
+            }
+            if (buildingHit) {
+                ms.sound.play("punch");
+                buildingHit.obj.damage(buildingHit.tile);
             }
         }
-        if (buildingHit) {
-            ms.sound.play("punch");
-            buildingHit.obj.damage(buildingHit.tile);
+
+        function standingAttackComplete() {
+            FSM.changeState("Fall");
         }
-    }
 
-    function standingAttackComplete() {
-        FSM.changeState("Fall");
-    }
+        function roofAttackComplete() {
+            FSM.changeState("RoofIdle");
+        }
 
-    function roofAttackComplete() {
-        FSM.changeState("RoofIdle");
-    }
+        function wallAttackComplete() {
+            FSM.changeState("WallIdle");
+        }
 
-    function wallAttackComplete() {
-        FSM.changeState("WallIdle");
-    }
+        function vertAttackComplete() {
+            FSM.changeState("VertIdle");
+        }
 
-    function vertAttackComplete() {
-        FSM.changeState("VertIdle");
-    }
+        function getFrameSize() {
+            return frameSize;
+        }
 
-    function getFrameSize() {
-        return frameSize;
-    }
+        function getPosition() {
+            return position;
+        }
 
-    function getPosition() {
-        return position;
-    }
-
-    return {
-        update: update
-        , render: render
-        , isLoaded: this.isLoaded
-        , getCollider: getCollider
-        , getFrameSize: getFrameSize
-        , getPosition: getPosition
-        , collideBuildings: collideBuildings
-        , collideEntities: collideEntities
-        , getAttackCollider: getAttackCollider
-        , isAttacking: isAttacking
-        , attackEntities: attackEntities
+        return {
+            update: update
+            , render: render
+            , isLoaded: this.isLoaded
+            , getCollider: getCollider
+            , getFrameSize: getFrameSize
+            , getPosition: getPosition
+            , collideBuildings: collideBuildings
+            , collideEntities: collideEntities
+            , getAttackCollider: getAttackCollider
+            , isAttacking: isAttacking
+            , attackEntities: attackEntities
+        };
     };
-};

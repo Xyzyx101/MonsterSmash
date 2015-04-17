@@ -33,6 +33,7 @@
             ms.loadModule("js/spawner.js");
             ms.loadModule("js/lib/howler.js");
             ms.loadModule("js/sound.js")
+            ms.loadModule("js/MeteorChunk.js");
         });
     </script>
 </head>
@@ -93,7 +94,7 @@
             <button class="return">Return</button>
         </div>
         <div id="levelCompleteScreen" class="screen">
-            <h2 class="logo">Level Complete!</h2>
+            <h2 id="levelCompleteMessage" class="logo">Level Complete!</h2>
             <section id="scoreSection">
                 <span class="scoreLabel">Score</span>
                 <span class="score">00000</span>
@@ -104,7 +105,7 @@
                     <div class="power"></div>
                 </div>
             </section>
-            <button class="nextButton">Next Level</button>
+            <button id="levelCompleteButton" class="nextButton">Next Level</button>
         </div>
     </div>
 </body>
