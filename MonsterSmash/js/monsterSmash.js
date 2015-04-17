@@ -90,6 +90,10 @@
     }
 
     function isTouchEnabled() {
+
+        //FIXME testing only
+        //return true;
+
         var msTouchEnabled = window.navigator.msMaxTouchPoints;
         var generalTouchEnabled = "ontouchstart" in document.createElement("div");
         if (msTouchEnabled || generalTouchEnabled) {
@@ -104,6 +108,7 @@
         , resourcesLoaded: resourcesLoaded
         , screens: screens
         , showScreen: showScreen
+        , isTouchEnabled: isTouchEnabled
     };
 })();
 

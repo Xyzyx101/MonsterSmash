@@ -38,6 +38,11 @@
         }
 
         var $ = ms.dom.$;
+
+        if (ms.isTouchEnabled()) {
+            $("#gameScreen #touchControls")[0].style.display = "block";
+        }
+
         var gameElement = $("#gameScreen")[0];
         var elementBounds = gameElement.getBoundingClientRect();
         gameScale = calculateScale(elementBounds);
