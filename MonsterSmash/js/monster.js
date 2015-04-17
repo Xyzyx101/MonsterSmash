@@ -1109,6 +1109,13 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             return position;
         }
 
+        function getCenter() {
+            return {
+                x: position.x + Math.floor(frameSize.width * 0.5)
+                , y: position.y + Math.floor(frameSize.height * 0.5)
+            };
+        }
+
         return {
             update: update
             , render: render
@@ -1116,6 +1123,7 @@ ms.Monster = function (ctx, initialPosition, levelSize) {
             , getCollider: getCollider
             , getFrameSize: getFrameSize
             , getPosition: getPosition
+            , getCenter: getCenter
             , collideBuildings: collideBuildings
             , collideEntities: collideEntities
             , getAttackCollider: getAttackCollider

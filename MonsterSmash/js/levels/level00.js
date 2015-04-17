@@ -39,10 +39,18 @@
             , size: { width: 5, height: 4 }
         }
     ]
-    , spawners:[
+    , spawners: [
         {
             type: "PoliceCar"
             , position: { x: 400 }
+            , rate: 30000
+        }, {
+            type: "PoliceCar"
+            , position: { x: 850 }
+            , rate: 40000
+        }, {
+            type: "PoliceCar"
+            , position: { x: 1700 }
             , rate: 30000
         }
     ]

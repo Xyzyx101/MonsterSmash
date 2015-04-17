@@ -133,7 +133,7 @@
 
     /* this will calculate debug info if you pass in a context */
     ms.Quadtree.prototype.retrieve = function (collider, hits, ctx) {
-        var hits = hits || [];
+        hits = hits || [];
         var index = this.getIndex(collider);
         if (this.nodes[0] !== null) {
             if (index === -1) {

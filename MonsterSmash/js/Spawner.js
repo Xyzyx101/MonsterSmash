@@ -2,7 +2,10 @@
 ms.Spawner = (function () {
     var spawns = []
         , registerEntity
+        , baseWidth
     ;
+
+    baseWidth = ms.screens.gameScreen.baseSize.width;
 
     function addSpawn (type, position, rate) {
         spawns.push(new spawn(type, position, rate));
@@ -13,8 +16,12 @@ ms.Spawner = (function () {
             var thisSpawn = spawns[spawnIndex];
             thisSpawn.timer -= dt;
             if (thisSpawn.timer < 0) {
-                spawnNewEntity(thisSpawn.type, thisSpawn.position);
-                thisSpawn.timer = thisSpawn.rate;
+                var cameraOffset = ms.screens.gameScreen.getCameraOffset();
+                /* Only spawns when not on screen */
+                if (thisSpawn.position.x < cameraOffset.x - 100 || thisSpawn.position.x > cameraOffset.x + baseWidth + 100) {
+                    spawnNewEntity(thisSpawn.type, thisSpawn.position);
+                    thisSpawn.timer = thisSpawn.rate;
+                }
             } 
         }
     }

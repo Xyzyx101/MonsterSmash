@@ -12,7 +12,7 @@
         , vel = initialVelocity
         , groundLevel = ms.screens.gameScreen.getGroundLevel()
         , gravity = ms.screens.gameScreen.getGravity()
-        , isStanding = false;
+        , isStanding = false
     ;
 
     var renderComp = ms.RenderComponent.call(this, ctx, "sprites/ProjectileSprite.png", ms.spriteData.projectile, 40, frameSize);
@@ -113,4 +113,4 @@
         , destroy: destroy
     };
 
-}
+};

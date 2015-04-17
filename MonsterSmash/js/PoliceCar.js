@@ -10,7 +10,7 @@
         }
         , flip = true
         , vel = { x: 0, y: 0 }
-        , driveSpeed = 10
+        , baseDriveSpeed = 4
         , monster
     ;
     position = { x: initialPosition.x, y: ms.screens.gameScreen.getGroundLevel() - frameSize.height };
@@ -194,7 +194,21 @@
                 renderComp.changeAnim("Drive");
             }
             , state: function (dt) {
-
+                console.log(position.x);
+                var driveSpeed;
+                var monsterCenter = monster.getCenter();
+                if (monsterCenter.x < position.x) {
+                    flip = false;
+                    driveSpeed = -baseDriveSpeed;
+                } else {
+                    flip = true;
+                    driveSpeed = baseDriveSpeed;
+                }
+                vel.x = driveSpeed;
+                position.x += vel.x * dt * 0.05;
+                if (Math.abs(monsterCenter.x - position.x - frameSize.width * 0.5) < 350) {
+                    FSM.changeState("OpenDoor");
+                }
             }
             , after: function () {
 
@@ -203,13 +217,13 @@
     FSM.addState("OpenDoor",
        {
            before: function () {
-               renderComp.changeAnim("OpenDoor");
+               renderComp.changeAnim("OpenDoor", function () { FSM.changeState("Idle"); });
            }
            , state: function (dt) {
-
+               vel.x *= 0.9;
            }
            , after: function () {
-
+               spawnPolice();
            }
        });
     FSM.changeState("Drive");
@@ -224,6 +238,10 @@
         renderComp.displayAnim(position.x, position.y, flip);
     }
 
+    function spawnPolice() {
+        console.log("TODO police man goes here");
+    }
+
     function getCollider() {
         return new ms.Collider(
            position.x + bbOffset.x
@@ -234,8 +252,10 @@
     }
 
     function destroy() {
-        // TODO
-        console.log("TODO Police car destroy");
+        this.kill = true;
+        ms.screens.gameScreen.markEntitiesDirty();
+        ms.sound.play("punch");
+        ms.gameManager.addScore(250);
     }
 
     return {
