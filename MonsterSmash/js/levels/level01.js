@@ -1,4 +1,4 @@
-﻿ms.levels.level00 = {
+﻿ms.levels.level01 = {
     levelSize: {
         width: 2048
         ,height: 768
@@ -20,38 +20,46 @@
         {
             buildingStyle: 0
             , xPos: 200
-            , size: { width: 6, height: 5 }
+            , size: { width: 4, height: 4 }
         }, {
             buildingStyle: 3
-            , xPos: 800
-            , size: { width: 3, height: 9 }
-        }, {
-            buildingStyle: 2
-            , xPos: 1150
+            , xPos: 550
             , size: { width: 3, height: 2 }
         }, {
             buildingStyle: 2
-            , xPos: 1350
+            , xPos: 950
+            , size: { width: 3, height: 4 }
+        }, {
+            buildingStyle: 4
+            , xPos: 1200
             , size: { width: 3, height: 2 }
         }, {
-            buildingStyle: 5
-            , xPos: 1700
-            , size: { width: 5, height: 4 }
+            buildingStyle: 1
+            , xPos: 1400
+            , size: { width: 3, height: 2 }
+        }, {
+            buildingStyle: 3
+            , xPos: 1600
+            , size: { width: 2, height: 4 }
         }
     ]
     , spawners: [
         {
             type: "PoliceCar"
             , position: { x: 400 }
-            , rate: 30000
+            , rate: 20000
         }, {
             type: "PoliceCar"
             , position: { x: 850 }
-            , rate: 40000
+            , rate: 30000
+        }, {
+            type: "PoliceCar"
+            , position: { x: 1200 }
+            , rate: 20000
         }, {
             type: "PoliceCar"
             , position: { x: 1700 }
-            , rate: 30000
+            , rate: 20000
         }
     ]
 };

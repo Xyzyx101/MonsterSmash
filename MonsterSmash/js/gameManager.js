@@ -11,6 +11,8 @@
 
     function init() {
         levelMap[0] = ms.levels.level00;
+        levelMap[1] = ms.levels.level01;
+        levelMap[2] = ms.levels.level02;
     }
 
     function startNewGame() {
